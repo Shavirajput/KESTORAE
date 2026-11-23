@@ -14,4 +14,30 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("registers the requested storefront pages and dynamic page templates", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+    const paths = [
+      "/shop",
+      "/collections/soft-furnishings",
+      "/products/linen-throw",
+      "/search",
+      "/rooms/living-room",
+      "/journal",
+      "/journal/slow-living",
+      "/about",
+      "/support",
+      "/cart",
+      "/checkout",
+      "/order-confirmation",
+      "/privacy-policy",
+      "/shipping-policy",
+      "/returns",
+      "/terms",
+    ];
+
+    for (const path of paths) {
+      expect(router.matchRoutes(path).at(-1)?.routeId, path).not.toBe(rootRouteId);
+    }
+  });
 });
