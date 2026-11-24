@@ -165,6 +165,44 @@
   --sidebar-ring: var(--brand-sand);
 }
 
+@utility nav-link {
+  display: inline-flex;
+  align-items: center;
+  padding-block: 0.625rem;
+  color: var(--color-foreground);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: color 160ms ease;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+@utility mobile-nav-link {
+  display: block;
+  padding-block: 0.75rem;
+  color: var(--color-foreground);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 160ms ease;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+@utility footer-link {
+  color: var(--color-muted-foreground);
+  transition: color 160ms ease;
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
