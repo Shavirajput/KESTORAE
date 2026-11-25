@@ -6,7 +6,8 @@ import { AddedToBagToast } from "@/components/storefront/AddedToBagToast";
 import { ProductCard } from "@/components/storefront/ProductCard";
 import { useCart } from "@/components/storefront/CartContext";
 import { Button } from "@/components/ui/button";
-import { getProduct, getProductsForRoom, formatPrice, rooms } from "@/data/catalogue";
+import { getProduct, getProductsForRoom, formatPrice } from "@/data/catalogue";
+import { rooms } from "@/data/storefront";
 import { storefrontHead } from "@/lib/storefront-meta";
 
 export const Route = createFileRoute("/products/$slug")({
@@ -16,7 +17,9 @@ export const Route = createFileRoute("/products/$slug")({
     const title = product ? product.name : "Product details";
     return storefrontHead({
       title: `${title} — product details`,
-      description: product ? product.shortDescription : "Product details for a Kestorae home and lifestyle item.",
+      description: product
+        ? product.shortDescription
+        : "Product details for a Kestorae home and lifestyle item.",
       path: `/products/${encodeURIComponent(params.slug)}`,
       type: "product",
     });
@@ -37,7 +40,9 @@ function ProductPage() {
       <main className="flex-1">
         <div className="mx-auto max-w-screen-xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-md border border-border bg-background px-6 py-12 text-center">
-            <h1 className="font-display text-xl font-medium text-brand-charcoal">We could not find that piece</h1>
+            <h1 className="font-display text-xl font-medium text-brand-charcoal">
+              We could not find that piece
+            </h1>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               “{requested}” is not part of the current Kestorae edit.
             </p>
@@ -51,7 +56,12 @@ function ProductPage() {
   }
 
   const relatedRooms = rooms.filter((room) => product.rooms.includes(room.slug));
-  const relatedProducts = getProductsForRoom(product.rooms[0]).filter((item) => item.slug !== product.slug).slice(0, 4);
+  const primaryRoom = product.rooms[0];
+  const relatedProducts = primaryRoom
+    ? getProductsForRoom(primaryRoom)
+        .filter((item) => item.slug !== product.slug)
+        .slice(0, 4)
+    : [];
 
   const handleAdd = () => {
     add(product.slug, quantity);
@@ -66,7 +76,10 @@ function ProductPage() {
     <main className="flex-1">
       <AddedToBagToast />
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-8 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-8 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
@@ -104,7 +117,9 @@ function ProductPage() {
             <h1 className="mt-3 font-display text-3xl font-medium leading-tight text-brand-charcoal sm:text-4xl">
               {product.name}
             </h1>
-            <p className="mt-3 text-2xl font-medium text-brand-charcoal">{formatPrice(product.price)}</p>
+            <p className="mt-3 text-2xl font-medium text-brand-charcoal">
+              {formatPrice(product.price)}
+            </p>
             <p className="mt-4 text-sm leading-6 text-muted-foreground">{product.description}</p>
 
             <div className="mt-6 flex items-center gap-3">
@@ -122,7 +137,11 @@ function ProductPage() {
                 >
                   −
                 </Button>
-                <span id="quantity" aria-live="polite" className="w-10 text-center text-sm font-medium">
+                <span
+                  id="quantity"
+                  aria-live="polite"
+                  className="w-10 text-center text-sm font-medium"
+                >
                   {quantity}
                 </span>
                 <Button
@@ -150,7 +169,10 @@ function ProductPage() {
             <ul className="mt-8 space-y-2 border-t border-border pt-6 text-sm text-muted-foreground">
               {product.details.map((detail) => (
                 <li key={detail} className="flex items-start gap-2">
-                  <span aria-hidden="true" className="mt-[7px] size-1 shrink-0 rounded-full bg-brand-olive" />
+                  <span
+                    aria-hidden="true"
+                    className="mt-[7px] size-1 shrink-0 rounded-full bg-brand-olive"
+                  />
                   {detail}
                 </li>
               ))}
@@ -158,28 +180,36 @@ function ProductPage() {
 
             <dl className="mt-6 space-y-3 border-t border-border pt-6 text-sm">
               <div>
-                <dt className="font-display text-xs font-semibold uppercase text-brand-charcoal">Materials</dt>
+                <dt className="font-display text-xs font-semibold uppercase text-brand-charcoal">
+                  Materials
+                </dt>
                 <dd className="mt-1 text-muted-foreground">{product.materials}</dd>
               </div>
               <div>
-                <dt className="font-display text-xs font-semibold uppercase text-brand-charcoal">Dimensions</dt>
+                <dt className="font-display text-xs font-semibold uppercase text-brand-charcoal">
+                  Dimensions
+                </dt>
                 <dd className="mt-1 text-muted-foreground">{product.dimensions}</dd>
               </div>
               <div>
-                <dt className="font-display text-xs font-semibold uppercase text-brand-charcoal">Care</dt>
+                <dt className="font-display text-xs font-semibold uppercase text-brand-charcoal">
+                  Care
+                </dt>
                 <dd className="mt-1 text-muted-foreground">{product.care}</dd>
               </div>
             </dl>
 
             <div className="mt-8 grid gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:grid-cols-3">
               <p className="flex items-center gap-2">
-                <Truck aria-hidden="true" className="size-4 text-brand-forest" /> Free delivery over £120
+                <Truck aria-hidden="true" className="size-4 text-brand-forest" /> Free delivery over
+                £120
               </p>
               <p className="flex items-center gap-2">
                 <RotateCcw aria-hidden="true" className="size-4 text-brand-forest" /> 30-day returns
               </p>
               <p className="flex items-center gap-2">
-                <PackageCheck aria-hidden="true" className="size-4 text-brand-forest" /> Illustrated catalogue piece
+                <PackageCheck aria-hidden="true" className="size-4 text-brand-forest" /> Illustrated
+                catalogue piece
               </p>
             </div>
 
@@ -205,7 +235,9 @@ function ProductPage() {
 
         {relatedProducts.length ? (
           <section aria-label="You may also like" className="mt-16 border-t border-border pt-10">
-            <h2 className="font-display text-xl font-medium text-brand-charcoal">You may also like</h2>
+            <h2 className="font-display text-xl font-medium text-brand-charcoal">
+              You may also like
+            </h2>
             <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
               {relatedProducts.map((item) => (
                 <ProductCard key={item.slug} product={item} />

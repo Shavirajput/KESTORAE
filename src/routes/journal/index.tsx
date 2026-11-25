@@ -1,15 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronRight } from "lucide-react";
 
-import { journalEntries } from "@/data/catalogue";
+import { formatJournalDate, journalEntries } from "@/data/catalogue";
 import { storefrontHead } from "@/lib/storefront-meta";
 
-export const Route = createFileRoute("/journal")({
+export const Route = createFileRoute("/journal/")({
   component: JournalPage,
   head: () =>
     storefrontHead({
       title: "Journal for considered living",
-      description: "Ideas for thoughtful, practical, and calm everyday spaces from the Kestorae journal.",
+      description:
+        "Ideas for thoughtful, practical, and calm everyday spaces from the Kestorae journal.",
       path: "/journal",
     }),
 });
@@ -20,7 +21,10 @@ function JournalPage() {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-10 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
@@ -38,39 +42,48 @@ function JournalPage() {
             Notes for considered living
           </h1>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
-            Practical ideas on creating calm, useful everyday spaces — written slowly, published occasionally.
+            Practical ideas on creating calm, useful everyday spaces — written slowly, published
+            occasionally.
           </p>
         </header>
 
-        <Link
-          to="/journal/$slug"
-          params={{ slug: featured.slug }}
-          className="group mt-10 grid gap-6 border border-border bg-background p-4 transition-shadow hover:shadow-md sm:p-6 lg:grid-cols-2 lg:gap-10"
-        >
-          <img
-            src={featured.image}
-            alt={featured.imageAlt}
-            width="760"
-            height="500"
-            loading="lazy"
-            className="aspect-[3/2] w-full rounded-sm object-cover"
-          />
-          <div className="flex flex-col justify-center">
-            <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-olive">
-              {featured.category} · {featured.readingTime}
-            </p>
-            <h2 className="mt-3 font-display text-2xl font-medium leading-snug text-brand-charcoal transition-colors group-hover:text-brand-forest sm:text-3xl">
-              {featured.title}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground">{featured.excerpt}</p>
-            <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-brand-forest">
-              Read the story
-              <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
-            </p>
-          </div>
-        </Link>
+        {featured ? (
+          <Link
+            to="/journal/$slug"
+            params={{ slug: featured.slug }}
+            className="group mt-10 grid gap-6 border border-border bg-background p-4 transition-shadow hover:shadow-md sm:p-6 lg:grid-cols-2 lg:gap-10"
+          >
+            <img
+              src={featured.image}
+              alt={featured.imageAlt}
+              width="760"
+              height="500"
+              loading="lazy"
+              className="aspect-[3/2] w-full rounded-sm object-cover"
+            />
+            <div className="flex flex-col justify-center">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-olive">
+                {featured.category} · {featured.readingTime}
+              </p>
+              <h2 className="mt-3 font-display text-2xl font-medium leading-snug text-brand-charcoal transition-colors group-hover:text-brand-forest sm:text-3xl">
+                {featured.title}
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{featured.excerpt}</p>
+              <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-brand-forest">
+                Read the story
+                <ArrowRight
+                  aria-hidden="true"
+                  className="size-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none"
+                />
+              </p>
+            </div>
+          </Link>
+        ) : null}
 
-        <section aria-label="More journal stories" className="mt-12 grid gap-x-4 gap-y-10 sm:grid-cols-2">
+        <section
+          aria-label="More journal stories"
+          className="mt-12 grid gap-x-4 gap-y-10 sm:grid-cols-2"
+        >
           {rest.map((entry) => (
             <Link
               key={entry.slug}
@@ -93,9 +106,7 @@ function JournalPage() {
                 {entry.title}
               </h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{entry.excerpt}</p>
-              <p className="mt-3 text-xs text-muted-foreground">
-                {new Date(entry.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
-              </p>
+              <p className="mt-3 text-xs text-muted-foreground">{formatJournalDate(entry.date)}</p>
             </Link>
           ))}
         </section>

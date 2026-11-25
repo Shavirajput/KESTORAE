@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 
-import { getJournalEntry, journalEntries } from "@/data/catalogue";
+import { formatJournalDate, getJournalEntry, journalEntries } from "@/data/catalogue";
 import { storefrontHead } from "@/lib/storefront-meta";
 
 export const Route = createFileRoute("/journal/$slug")({
@@ -27,11 +27,16 @@ function JournalEntryPage() {
       <main className="flex-1">
         <div className="mx-auto max-w-screen-xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-md border border-border bg-background px-6 py-12 text-center">
-            <h1 className="font-display text-xl font-medium text-brand-charcoal">Story not found</h1>
+            <h1 className="font-display text-xl font-medium text-brand-charcoal">
+              Story not found
+            </h1>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               “{slug}” is not part of the journal yet.
             </p>
-            <Link to="/journal" className="mt-6 inline-block text-sm font-medium text-brand-forest hover:underline">
+            <Link
+              to="/journal"
+              className="mt-6 inline-block text-sm font-medium text-brand-forest hover:underline"
+            >
               Back to the journal
             </Link>
           </div>
@@ -45,7 +50,10 @@ function JournalEntryPage() {
   return (
     <main className="flex-1">
       <article className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-8 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
@@ -54,7 +62,10 @@ function JournalEntryPage() {
             Journal
           </Link>
           <ChevronRight aria-hidden="true" className="size-3" />
-          <span aria-current="page" className="max-w-[12rem] truncate text-foreground sm:max-w-none">
+          <span
+            aria-current="page"
+            className="max-w-[12rem] truncate text-foreground sm:max-w-none"
+          >
             {entry.title}
           </span>
         </nav>
@@ -66,9 +77,7 @@ function JournalEntryPage() {
           <h1 className="mt-3 font-display text-3xl font-medium leading-tight text-brand-charcoal sm:text-4xl">
             {entry.title}
           </h1>
-          <p className="mt-3 text-xs text-muted-foreground">
-            {new Date(entry.date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
-          </p>
+          <p className="mt-3 text-xs text-muted-foreground">{formatJournalDate(entry.date)}</p>
         </header>
 
         <img

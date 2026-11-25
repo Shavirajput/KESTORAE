@@ -46,7 +46,10 @@ function CollectionPage() {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-10 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>

@@ -43,11 +43,11 @@ export const rooms = [
 ] as const;
 
 export const shopLinks = [
-  { label: "Living Room", slug: "living-room" },
-  { label: "Bedroom", slug: "bedroom" },
-  { label: "Dining", slug: "dining" },
-  { label: "Workspace", slug: "workspace" },
-  { label: "Storage", slug: "storage" },
-  { label: "New Arrivals", slug: "new-arrivals" },
-  { label: "Bestsellers", slug: "bestsellers" },
+  { label: "Living Room", slug: "living-room", kind: "room" },
+  { label: "Bedroom", slug: "bedroom", kind: "room" },
+  { label: "Dining", slug: "dining", kind: "room" },
+  { label: "Workspace", slug: "workspace", kind: "room" },
+  { label: "Storage", slug: "storage", kind: "collection" },
+  { label: "New Arrivals", slug: "new-arrivals", kind: "collection" },
+  { label: "Bestsellers", slug: "bestsellers", kind: "collection" },
 ] as const;

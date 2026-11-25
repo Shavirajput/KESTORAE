@@ -48,7 +48,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const setQuantity = useCallback((slug: string, quantity: number) => {
     setLines((current) => {
       if (quantity <= 0) return current.filter((line) => line.slug !== slug);
-      return current.map((line) => (line.slug === slug ? { ...line, quantity: Math.min(quantity, 99) } : line));
+      return current.map((line) =>
+        line.slug === slug ? { ...line, quantity: Math.min(quantity, 99) } : line,
+      );
     });
   }, []);
 

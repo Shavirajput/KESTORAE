@@ -21,7 +21,10 @@ function ShopPage() {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-10 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
@@ -39,15 +42,21 @@ function ShopPage() {
             Shop Kestorae
           </h1>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
-            A room-led directory of thoughtfully considered home and lifestyle essentials — each piece chosen for how
-            it works on an ordinary day.
+            A room-led directory of thoughtfully considered home and lifestyle essentials — each
+            piece chosen for how it works on an ordinary day.
           </p>
         </header>
 
         <section aria-label="Shop by collection" className="mt-10">
           <div className="flex flex-wrap gap-2">
             {collections.map((collection) => (
-              <Button asChild key={collection.slug} variant="outline" size="sm" className="bg-background">
+              <Button
+                asChild
+                key={collection.slug}
+                variant="outline"
+                size="sm"
+                className="bg-background"
+              >
                 <Link to="/collections/$slug" params={{ slug: collection.slug }}>
                   {collection.title}
                 </Link>

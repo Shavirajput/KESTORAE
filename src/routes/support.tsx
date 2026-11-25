@@ -8,7 +8,8 @@ export const Route = createFileRoute("/support")({
   head: () =>
     storefrontHead({
       title: "Customer care",
-      description: "Find customer care and order support information for the Kestorae storefront preview.",
+      description:
+        "Find customer care and order support information for the Kestorae storefront preview.",
       path: "/support",
     }),
 });

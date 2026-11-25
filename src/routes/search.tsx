@@ -29,7 +29,10 @@ function SearchPage() {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-10 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
@@ -39,7 +42,9 @@ function SearchPage() {
         </nav>
 
         <header className="max-w-2xl">
-          <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-olive">Search</p>
+          <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-olive">
+            Search
+          </p>
           <h1 className="mt-3 font-display text-3xl font-medium leading-tight text-brand-charcoal sm:text-4xl">
             {hasQuery ? `Results for “${term}”` : "Search Kestorae"}
           </h1>
@@ -57,7 +62,9 @@ function SearchPage() {
         {hasQuery && results.length === 0 ? (
           <section className="mt-12 max-w-md border border-border bg-background px-6 py-12 text-center">
             <SearchX aria-hidden="true" className="mx-auto size-8 text-brand-olive" />
-            <h2 className="mt-4 font-display text-lg font-medium text-brand-charcoal">No matching pieces</h2>
+            <h2 className="mt-4 font-display text-lg font-medium text-brand-charcoal">
+              No matching pieces
+            </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Nothing in the collection matches “{term}”. Try a material, a room, or a shorter word.
             </p>
@@ -79,10 +86,18 @@ function SearchPage() {
 
         {!hasQuery ? (
           <section aria-label="Browse by room" className="mt-12 border-t border-border pt-8">
-            <h2 className="font-display text-lg font-medium text-brand-charcoal">Or start with a room</h2>
+            <h2 className="font-display text-lg font-medium text-brand-charcoal">
+              Or start with a room
+            </h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {rooms.map((room) => (
-                <Button asChild key={room.slug} variant="outline" size="sm" className="bg-background">
+                <Button
+                  asChild
+                  key={room.slug}
+                  variant="outline"
+                  size="sm"
+                  className="bg-background"
+                >
                   <Link to="/rooms/$slug" params={{ slug: room.slug }}>
                     {room.title}
                   </Link>

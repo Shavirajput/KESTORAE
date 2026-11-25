@@ -5,7 +5,12 @@ type StorefrontHeadOptions = {
   type?: "website" | "article" | "product";
 };
 
-export function storefrontHead({ title, description, path, type = "website" }: StorefrontHeadOptions) {
+export function storefrontHead({
+  title,
+  description,
+  path,
+  type = "website",
+}: StorefrontHeadOptions) {
   const fullTitle = `${title} | Kestorae`;
 
   return {

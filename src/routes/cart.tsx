@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
-import { useCart } from "@/components/storefront/CartContext";
+import { FREE_DELIVERY_THRESHOLD, useCart } from "@/components/storefront/CartContext";
 import { EmptyState } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatPrice, getProduct, FREE_DELIVERY_THRESHOLD } from "@/data/catalogue";
+import { formatPrice, getProduct } from "@/data/catalogue";
 import { storefrontHead } from "@/lib/storefront-meta";
 
 export const Route = createFileRoute("/cart")({
@@ -42,7 +42,10 @@ function CartPage() {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-10 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/" className="transition-colors hover:text-foreground">
             Home
           </Link>
@@ -52,8 +55,15 @@ function CartPage() {
         </nav>
 
         <header className="flex flex-wrap items-end justify-between gap-3">
-          <h1 className="font-display text-3xl font-medium text-brand-charcoal sm:text-4xl">Your bag</h1>
-          <Button type="button" variant="link" className="px-0 text-muted-foreground" onClick={clear}>
+          <h1 className="font-display text-3xl font-medium text-brand-charcoal sm:text-4xl">
+            Your bag
+          </h1>
+          <Button
+            type="button"
+            variant="link"
+            className="px-0 text-muted-foreground"
+            onClick={clear}
+          >
             Empty the bag
           </Button>
         </header>
@@ -146,7 +156,10 @@ function CartPage() {
             </ul>
           </section>
 
-          <aside aria-label="Order summary" className="h-fit border border-border bg-brand-sand/30 p-6">
+          <aside
+            aria-label="Order summary"
+            className="h-fit border border-border bg-brand-sand/30 p-6"
+          >
             <h2 className="font-display text-lg font-medium text-brand-charcoal">Order summary</h2>
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex justify-between">

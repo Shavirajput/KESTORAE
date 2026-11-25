@@ -80,11 +80,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Kestorae | Home & Lifestyle" },
-      { name: "description", content: "Thoughtfully designed home and lifestyle essentials for modern living." },
+      {
+        name: "description",
+        content: "Thoughtfully designed home and lifestyle essentials for modern living.",
+      },
       { name: "author", content: "Kestorae" },
       { property: "og:site_name", content: "Kestorae" },
       { property: "og:title", content: "Kestorae | Home & Lifestyle" },
-      { property: "og:description", content: "Thoughtfully designed home and lifestyle essentials for modern living." },
+      {
+        property: "og:description",
+        content: "Thoughtfully designed home and lifestyle essentials for modern living.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -110,11 +116,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Scripts />
       </body>

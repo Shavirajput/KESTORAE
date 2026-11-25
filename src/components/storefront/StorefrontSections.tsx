@@ -14,7 +14,9 @@ export function AssuranceStrip() {
           <div key={title} className="flex items-start gap-3">
             <Icon aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-forest" />
             <div>
-              <h2 className="font-display text-xs font-semibold uppercase text-brand-charcoal">{title}</h2>
+              <h2 className="font-display text-xs font-semibold uppercase text-brand-charcoal">
+                {title}
+              </h2>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">{text}</p>
             </div>
           </div>
@@ -24,7 +26,15 @@ export function AssuranceStrip() {
   );
 }
 
-export function EmptyState({ title, description, children }: { title: string; description: string; children?: React.ReactNode }) {
+export function EmptyState({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className="mx-auto max-w-md border border-border bg-background px-6 py-12 text-center">
       <CircleCheck aria-hidden="true" className="mx-auto size-8 text-brand-olive" />

@@ -40,9 +40,13 @@ export function ProductCard({ product }: { product: Product }) {
               {product.name}
             </Link>
           </h3>
-          <p className="shrink-0 text-sm font-medium text-brand-charcoal">{formatPrice(product.price)}</p>
+          <p className="shrink-0 text-sm font-medium text-brand-charcoal">
+            {formatPrice(product.price)}
+          </p>
         </div>
-        <p className="mt-1 flex-1 text-xs leading-5 text-muted-foreground">{product.shortDescription}</p>
+        <p className="mt-1 flex-1 text-xs leading-5 text-muted-foreground">
+          {product.shortDescription}
+        </p>
         <Button
           type="button"
           variant="outline"

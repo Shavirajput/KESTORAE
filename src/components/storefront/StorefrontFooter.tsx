@@ -1,120 +1,232 @@
 import { useState, type FormEvent } from "react";
-import { ArrowRight, Instagram } from "lucide-react";
+import { Globe } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { shopLinks } from "@/data/storefront";
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function StorefrontFooter() {
-  const [newsletterNotice, setNewsletterNotice] = useState("");
+  const [email, setEmail] = useState("");
+  const [feedback, setFeedback] = useState<{ kind: "error" | "success"; message: string } | null>(
+    null,
+  );
 
   const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setNewsletterNotice("This preview does not store email addresses or send newsletters yet.");
+    const trimmed = email.trim();
+    if (!EMAIL_PATTERN.test(trimmed)) {
+      setFeedback({
+        kind: "error",
+        message: "Please enter a valid email address to subscribe.",
+      });
+      return;
+    }
+    setEmail("");
+    setFeedback({
+      kind: "success",
+      message:
+        "Thank you for joining Considered Living. Newsletter signup is simulated in this frontend preview.",
+    });
   };
 
   return (
-    <footer className="mt-auto border-t border-border bg-brand-sand/50">
-      <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+    <footer className="mt-auto border-t border-border bg-brand-sand/55">
+      <div className="mx-auto max-w-[1320px] px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.25fr_0.85fr_0.85fr_1.35fr] lg:gap-10">
           <section aria-labelledby="footer-brand">
-            <h2 id="footer-brand" className="font-display text-sm font-semibold uppercase text-brand-forest">
+            <h2
+              id="footer-brand"
+              className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-brand-forest"
+            >
               Kestorae
             </h2>
             <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">
-              Thoughtfully considered home and lifestyle essentials for calmer, more useful everyday spaces.
+              Thoughtfully designed home essentials that make everyday living more comfortable,
+              organised and calm.
             </p>
-            <p className="mt-4 text-xs font-medium text-brand-charcoal">Nordic Studio · Copenhagen × Stockholm × London</p>
-            <p className="mt-2 text-xs text-muted-foreground">A fictional portfolio concept.</p>
+            <div className="mt-6">
+              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-charcoal">
+                Nordic Studio
+              </p>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                Copenhagen <span aria-hidden="true">•</span> Stockholm{" "}
+                <span aria-hidden="true">•</span> London
+              </p>
+            </div>
           </section>
 
           <section aria-labelledby="footer-shop">
-            <h2 id="footer-shop" className="font-display text-xs font-semibold uppercase tracking-[0.08em]">
+            <h2
+              id="footer-shop"
+              className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-charcoal"
+            >
               Shop
             </h2>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-2.5 text-sm">
               {shopLinks.map((item) => (
                 <li key={item.slug}>
-                  <Link
-                    to="/collections/$slug"
-                    params={{ slug: item.slug }}
-                    className="footer-link"
-                  >
-                    {item.label}
-                  </Link>
+                  {item.kind === "room" ? (
+                    <Link to="/rooms/$slug" params={{ slug: item.slug }} className="footer-link">
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/collections/$slug"
+                      params={{ slug: item.slug }}
+                      className="footer-link"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
           </section>
 
           <section aria-labelledby="footer-about">
-            <h2 id="footer-about" className="font-display text-xs font-semibold uppercase tracking-[0.08em]">
+            <h2
+              id="footer-about"
+              className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-charcoal"
+            >
               About
             </h2>
-            <ul className="mt-4 space-y-2">
-              <li><Link to="/about" className="footer-link">Our philosophy</Link></li>
-              <li><Link to="/about" className="footer-link">Responsible choices</Link></li>
-              <li><Link to="/about" className="footer-link">Materials & craft</Link></li>
-              <li><Link to="/journal" className="footer-link">Journal</Link></li>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <Link to="/about" className="footer-link">
+                  Our Philosophy
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="footer-link">
+                  Responsible Choices
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="footer-link">
+                  Materials &amp; Craft
+                </Link>
+              </li>
+              <li>
+                <Link to="/journal" className="footer-link">
+                  Journal
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="footer-link">
+                  Careers
+                </Link>
+              </li>
             </ul>
           </section>
 
           <section aria-labelledby="footer-considered">
-            <h2 id="footer-considered" className="font-display text-xs font-semibold uppercase tracking-[0.08em]">
-              Considered living
+            <h2
+              id="footer-considered"
+              className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-charcoal"
+            >
+              Considered Living
             </h2>
             <p className="mt-4 text-sm leading-6 text-muted-foreground">
-              Join the Kestorae community for notes on useful, thoughtful spaces.
+              Join the Kestorae community for seasonal releases and quiet reflections on considered
+              living.
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="mt-4 flex gap-2">
-              <label htmlFor="newsletter-email" className="sr-only">Your email address</label>
+            <form
+              onSubmit={handleNewsletterSubmit}
+              noValidate
+              className="mt-4 flex flex-col gap-2 sm:flex-row"
+            >
+              <label htmlFor="newsletter-email" className="sr-only">
+                Your email address
+              </label>
               <Input
                 id="newsletter-email"
                 name="email"
                 type="email"
                 autoComplete="email"
-                required
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  if (feedback) setFeedback(null);
+                }}
                 placeholder="Your email address"
-                className="h-10 min-w-0 rounded-sm bg-background text-sm"
+                aria-invalid={feedback?.kind === "error"}
+                className="h-10 min-w-0 flex-1 rounded-sm border-border bg-background text-sm"
               />
-              <Button type="submit" variant="default" size="icon" aria-label="Subscribe to the newsletter preview">
-                <ArrowRight aria-hidden="true" />
+              <Button
+                type="submit"
+                className="h-10 shrink-0 rounded-sm bg-brand-forest px-5 font-display text-xs font-medium text-brand-ivory hover:bg-brand-forest/90"
+              >
+                Subscribe
               </Button>
             </form>
-            {newsletterNotice ? (
-              <p role="status" className="mt-2 text-xs leading-5 text-muted-foreground">
-                {newsletterNotice}
+            {feedback ? (
+              <p
+                role="status"
+                className={`mt-2.5 text-xs leading-5 ${
+                  feedback.kind === "error" ? "text-brand-terracotta" : "text-brand-forest"
+                }`}
+              >
+                {feedback.message}
               </p>
             ) : null}
 
-            <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground">
-              <Link to="/support" className="footer-link">Customer care</Link>
-              <Link to="/shipping-policy" className="footer-link">Shipping</Link>
-              <Link to="/returns" className="footer-link">Returns</Link>
+            <div className="mt-6">
+              <p className="font-display text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                Customer Care
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs text-muted-foreground">
+                <Link to="/support" className="footer-link">
+                  Help Centre
+                </Link>
+                <span aria-hidden="true">•</span>
+                <Link to="/shipping-policy" className="footer-link">
+                  Shipping
+                </Link>
+                <span aria-hidden="true">•</span>
+                <Link to="/returns" className="footer-link">
+                  Returns
+                </Link>
+                <span aria-hidden="true">•</span>
+                <Link to="/support" className="footer-link">
+                  Order Tracking
+                </Link>
+              </div>
             </div>
-            <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-              <Instagram aria-hidden="true" className="size-4" /> Instagram · link to be added
-            </p>
           </section>
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 border-t border-border pt-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>Region · United Kingdom / GBP (£) <span className="text-brand-clay">(example)</span></p>
-          <p>Payment methods · preview only</p>
-          <p>© 2026 Kestorae. All rights reserved.</p>
-        </div>
+        <div className="mt-12 flex flex-col gap-4 border-t border-border/80 pt-6 text-xs text-muted-foreground lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <span className="inline-flex items-center gap-1.5 font-medium text-brand-charcoal">
+              <Globe aria-hidden="true" className="size-3.5 text-brand-forest" />
+              United Kingdom (GBP £)
+            </span>
+            <span className="font-display text-[10px] tracking-[0.12em] text-muted-foreground uppercase">
+              Apple Pay · Visa · Mastercard · Klarna
+            </span>
+          </div>
 
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
-          <Link to="/privacy-policy" className="footer-link">Privacy</Link>
-          <Link to="/shipping-policy" className="footer-link">Shipping policy</Link>
-          <Link to="/returns" className="footer-link">Returns</Link>
-          <Link to="/terms" className="footer-link">Terms</Link>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p>© 2026 Kestorae Home &amp; Lifestyle. All rights reserved.</p>
+            <nav aria-label="Legal links" className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <Link to="/privacy-policy" className="footer-link">
+                Privacy
+              </Link>
+              <Link to="/shipping-policy" className="footer-link">
+                Shipping Policy
+              </Link>
+              <Link to="/returns" className="footer-link">
+                Returns
+              </Link>
+              <Link to="/terms" className="footer-link">
+                Terms
+              </Link>
+            </nav>
+          </div>
         </div>
-        <p className="mt-5 max-w-4xl text-xs leading-5 text-muted-foreground">
-          Kestorae is a fictional portfolio brand. Product details, prices, delivery and returns terms, and other commercial
-          information shown here are illustrative and are not verified offers or policies.
-        </p>
       </div>
     </footer>
   );

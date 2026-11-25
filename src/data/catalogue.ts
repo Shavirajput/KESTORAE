@@ -3,6 +3,10 @@ import livingRoomImage from "@/assets/living-room.png.asset.json";
 import bedroomImage from "@/assets/bedroom.png.asset.json";
 import workspaceImage from "@/assets/workspace.png.asset.json";
 import storageEntrywayImage from "@/assets/storage-entryway.png.asset.json";
+import productCeramicVaseImage from "@/assets/images/product_ceramic_vase_1795587772032.jpg";
+import productOakTableImage from "@/assets/images/product_oak_table_1795587773196.jpg";
+import productLinenThrowImage from "@/assets/images/product_linen_throw_1795587773679.jpg";
+import productStonewareSetImage from "@/assets/images/product_stoneware_set_1795587776125.jpg";
 
 import { rooms } from "@/data/storefront";
 
@@ -11,7 +15,8 @@ export type Product = {
   name: string;
   price: number;
   /** GBP, illustrative */
-  category: "Soft furnishings" | "Tableware" | "Furniture" | "Storage" | "Lighting" | "Home fragrance";
+  category:
+    "Soft furnishings" | "Tableware" | "Furniture" | "Storage" | "Lighting" | "Home fragrance";
   rooms: readonly string[];
   collections: readonly string[];
   badge?: "New" | "Bestseller";
@@ -72,8 +77,8 @@ export const products: readonly Product[] = [
     materials: "100% stonewashed European flax linen",
     dimensions: "130 × 180 cm",
     care: "Machine wash cool, line dry, warm iron if desired",
-    image: IMAGE.bedroom,
-    imageAlt: "A linen throw folded over the arm of a chair in warm natural tones",
+    image: productLinenThrowImage,
+    imageAlt: "A stonewashed flax linen throw draped gently over a pale solid oak bench",
   },
   {
     slug: "oak-side-table",
@@ -86,12 +91,16 @@ export const products: readonly Product[] = [
     shortDescription: "A compact solid-oak side table with a quiet, rounded profile.",
     description:
       "Cut from solid oak with a soft-rounded edge and a low, stable stance, the Herra side table sits comfortably beside a sofa or bed. A single drawer keeps remotes and reading glasses within reach but out of sight.",
-    details: ["Solid oak with hard-wax oil finish", "Soft-close drawer with oak front", "Felt-padded base protects floors"],
+    details: [
+      "Solid oak with hard-wax oil finish",
+      "Soft-close drawer with oak front",
+      "Felt-padded base protects floors",
+    ],
     materials: "Solid European oak, hard-wax oil finish",
     dimensions: "W 45 × D 40 × H 52 cm",
     care: "Wipe with a dry cloth; re-oil once a year",
-    image: IMAGE.livingRoom,
-    imageAlt: "A solid oak side table beside a linen sofa in a calm living room",
+    image: productOakTableImage,
+    imageAlt: "A solid European oak side table with softly rounded edges in a calm sunlit room",
   },
   {
     slug: "stoneware-dinner-set",
@@ -104,12 +113,16 @@ export const products: readonly Product[] = [
     shortDescription: "Sixteen pieces of glazed stoneware for slow, everyday meals.",
     description:
       "The Bren set covers everyday dining for four: dinner plates, side plates, and bowls in a warm speckled glaze. Each piece is finished with a satin rim that resists chipping and stacks neatly in close quarters.",
-    details: ["Service for four, 16 pieces", "Reactive speckled glaze, satin rim", "Dishwasher and microwave safe"],
+    details: [
+      "Service for four, 16 pieces",
+      "Reactive speckled glaze, satin rim",
+      "Dishwasher and microwave safe",
+    ],
     materials: "Glazed stoneware",
     dimensions: "Dinner plate 27 cm · side plate 21 cm · bowl 15 cm",
     care: "Dishwasher safe; avoid thermal shock",
-    image: IMAGE.dining,
-    imageAlt: "A stoneware dinner set arranged on a welcoming dining table",
+    image: productStonewareSetImage,
+    imageAlt: "Stacked speckled warm sand stoneware plates and bowls on raw oatmeal linen",
   },
   {
     slug: "linen-cushion",
@@ -122,7 +135,11 @@ export const products: readonly Product[] = [
     shortDescription: "A feather-filled cushion in washed clay linen with a piped edge.",
     description:
       "The Mova cushion pairs a washed clay-linen cover with a plump feather inner. The piped edge gives sofas and beds a finished line, and the hidden zip keeps the cover easy to refresh.",
-    details: ["Washed linen cover with piped edge", "Feather and down inner included", "Hidden zip closure"],
+    details: [
+      "Washed linen cover with piped edge",
+      "Feather and down inner included",
+      "Hidden zip closure",
+    ],
     materials: "Washed linen cover; feather and down inner",
     dimensions: "50 × 50 cm",
     care: "Cover machine wash cool; inner air only",
@@ -157,7 +174,11 @@ export const products: readonly Product[] = [
     shortDescription: "A flat-woven wool rug in heathered sand and clay tones.",
     description:
       "Flat-woven from undyed and gently overdyed wool, the Terra rug lays flat from day one and brings quiet warmth underfoot. Its heathered sand-and-clay palette anchors a room without asking for attention.",
-    details: ["Flat-woven wool, 8 mm pile", "Undyed and low-impact dyes", "Reusable cotton storage bag included"],
+    details: [
+      "Flat-woven wool, 8 mm pile",
+      "Undyed and low-impact dyes",
+      "Reusable cotton storage bag included",
+    ],
     materials: "100% wool",
     dimensions: "170 × 240 cm",
     care: "Vacuum without beater bar; professional clean",
@@ -175,12 +196,16 @@ export const products: readonly Product[] = [
     shortDescription: "A hand-glazed vase with a soft matte exterior and sealed interior.",
     description:
       "Thrown in small batches, the Pella vase carries a soft matte glaze outside and a sealed interior that holds water for fresh stems. Its narrow neck makes an easy silhouette of a few stems or branches.",
-    details: ["Hand-thrown in small batches", "Matte exterior glaze, sealed interior", "Watertight for fresh flowers"],
+    details: [
+      "Hand-thrown in small batches",
+      "Matte exterior glaze, sealed interior",
+      "Watertight for fresh flowers",
+    ],
     materials: "Glazed ceramic",
     dimensions: "H 24 × Ø 12 cm",
     care: "Rinse by hand; not dishwasher safe",
-    image: IMAGE.dining,
-    imageAlt: "A hand-glazed ceramic vase holding dried stems",
+    image: productCeramicVaseImage,
+    imageAlt: "A hand-thrown matte sand stoneware vase holding a dried branch on pale oak",
   },
   {
     slug: "storage-bench",
@@ -192,7 +217,11 @@ export const products: readonly Product[] = [
     shortDescription: "An entryway bench with a lift-up seat and shoe shelf below.",
     description:
       "The Koln bench tidies the threshold of the home: a lift-up seat for scarves and bags, an open shelf for the shoes in daily rotation, and a solid top that doubles as a spot to sit while lacing up.",
-    details: ["Lift-up seat with safety stay", "Open lower shelf for daily shoes", "Assembles in under 20 minutes"],
+    details: [
+      "Lift-up seat with safety stay",
+      "Open lower shelf for daily shoes",
+      "Assembles in under 20 minutes",
+    ],
     materials: "Solid oak and oak veneer",
     dimensions: "W 90 × D 35 × H 48 cm",
     care: "Wipe with a dry cloth",
@@ -209,7 +238,11 @@ export const products: readonly Product[] = [
     shortDescription: "A slim solid-ash wall shelf with hidden fixings.",
     description:
       "The Sten shelf keeps everyday essentials in reach without claiming floor space. Hidden keyhole fixings let it hang flush, and the slim ash profile suits hallways, desks, and above the bed alike.",
-    details: ["Hidden keyhole fixings included", "Solid ash with clear matte lacquer", "Holds up to 8 kg when fixed well"],
+    details: [
+      "Hidden keyhole fixings included",
+      "Solid ash with clear matte lacquer",
+      "Holds up to 8 kg when fixed well",
+    ],
     materials: "Solid ash, matte lacquer",
     dimensions: "W 60 × D 12 × H 4 cm",
     care: "Wipe with a dry cloth",
@@ -260,7 +293,11 @@ export const products: readonly Product[] = [
     shortDescription: "A tiered oak organiser that keeps the desk surface clear.",
     description:
       "The Rill organiser lifts the things that clutter a working day into a tidy tier: pens and tools up top, papers below, and a felt-lined tray for the small items that go missing.",
-    details: ["Two tiers with felt-lined tray", "Solid oak with matte finish", "Flat-packs for storage"],
+    details: [
+      "Two tiers with felt-lined tray",
+      "Solid oak with matte finish",
+      "Flat-packs for storage",
+    ],
     materials: "Solid oak, wool felt",
     dimensions: "W 28 × D 18 × H 14 cm",
     care: "Wipe with a dry cloth",
@@ -277,7 +314,11 @@ export const products: readonly Product[] = [
     shortDescription: "A soft-glow bedside lamp with a linen shade and touch dimmer.",
     description:
       "Made for the last hour of the day, the Noor lamp gives a warm, low glow through a washed linen shade. A three-step touch dimmer sits on the base, so adjusting the light never breaks the quiet.",
-    details: ["Three-step touch dimmer", "Washed linen shade", "Warm-white replaceable LED included"],
+    details: [
+      "Three-step touch dimmer",
+      "Washed linen shade",
+      "Warm-white replaceable LED included",
+    ],
     materials: "Ceramic base, washed linen shade",
     dimensions: "Ø 18 × H 32 cm",
     care: "Dust shade with a soft brush",
@@ -294,7 +335,11 @@ export const products: readonly Product[] = [
     shortDescription: "A crisp percale duvet set in warm ivory with co-ordinating shams.",
     description:
       "Woven from long-staple cotton percale and finished in warm ivory, the Vela set brings hotel-crisp freshness to the bedroom. The duvet cover closes with hidden ties and a row of corozo buttons.",
-    details: ["Long-staple cotton percale, 200 TC", "Corozo button closure and inner ties", "Two pillowcases included"],
+    details: [
+      "Long-staple cotton percale, 200 TC",
+      "Corozo button closure and inner ties",
+      "Two pillowcases included",
+    ],
     materials: "100% cotton percale",
     dimensions: "Fits 200 × 200 cm duvets",
     care: "Machine wash warm, line dry",
@@ -328,7 +373,11 @@ export const products: readonly Product[] = [
     shortDescription: "A hand-finished terracotta pot with a drainage tray.",
     description:
       "Hand-finished with a raw exterior and smooth rim, the Vela pot suits both leafy plants and structural succulents. A matching drainage tray keeps shelves and sills dry.",
-    details: ["Raw terracotta breathes with roots", "Matching drainage tray included", "Fits nursery pots up to 14 cm"],
+    details: [
+      "Raw terracotta breathes with roots",
+      "Matching drainage tray included",
+      "Fits nursery pots up to 14 cm",
+    ],
     materials: "Terracotta",
     dimensions: "Ø 15 × H 14 cm",
     care: "Indoor use; wipe tray after watering",
@@ -380,7 +429,8 @@ export const journalEntries: readonly JournalEntry[] = [
   {
     slug: "slow-living",
     title: "Slow Living Begins at Home",
-    excerpt: "Why the objects we reach for every day shape the pace of our lives — and how to choose them well.",
+    excerpt:
+      "Why the objects we reach for every day shape the pace of our lives — and how to choose them well.",
     date: "2026-11-18",
     readingTime: "4 min read",
     category: "Philosophy",
@@ -396,7 +446,8 @@ export const journalEntries: readonly JournalEntry[] = [
   {
     slug: "the-entryway-reset",
     title: "The Five-Minute Entryway Reset",
-    excerpt: "A small weekly ritual that keeps the threshold of your home calm, whatever the week has been.",
+    excerpt:
+      "A small weekly ritual that keeps the threshold of your home calm, whatever the week has been.",
     date: "2026-11-04",
     readingTime: "3 min read",
     category: "How to",
@@ -412,7 +463,8 @@ export const journalEntries: readonly JournalEntry[] = [
   {
     slug: "caring-for-linen",
     title: "Caring for Linen, Simply",
-    excerpt: "Linen rewards the lightest of touches. A short guide to washing, drying, and softening it well.",
+    excerpt:
+      "Linen rewards the lightest of touches. A short guide to washing, drying, and softening it well.",
     date: "2026-10-21",
     readingTime: "5 min read",
     category: "Care guides",
@@ -455,7 +507,13 @@ export function searchProducts(term: string) {
   const q = term.trim().toLowerCase();
   if (!q) return [];
   return products.filter((product) =>
-    [product.name, product.shortDescription, product.category, ...product.rooms, ...product.collections]
+    [
+      product.name,
+      product.shortDescription,
+      product.category,
+      ...product.rooms,
+      ...product.collections,
+    ]
       .join(" ")
       .toLowerCase()
       .includes(q),
@@ -463,5 +521,36 @@ export function searchProducts(term: string) {
 }
 
 export function formatPrice(amount: number) {
-  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: 2 }).format(amount);
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: 2,
+  }).format(amount);
+}
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
+export function formatJournalDate(isoDate: string) {
+  const parts = isoDate.split("-");
+  const year = Number(parts[0]);
+  const monthIndex = Number(parts[1]) - 1;
+  const day = Number(parts[2]);
+  const month = MONTHS[monthIndex];
+  if (!Number.isFinite(year) || !Number.isFinite(day) || !month) {
+    return isoDate;
+  }
+  return `${day} ${month} ${year}`;
 }

@@ -28,7 +28,7 @@ const deliveryOptions = [
 ] as const;
 
 function CheckoutPage() {
-  const { lines, subtotal, delivery, total, clear } = useCart();
+  const { lines, subtotal, delivery, clear } = useCart();
   const navigate = useNavigate();
   const [shippingMethod, setShippingMethod] = useState<string>("standard");
   const [submitting, setSubmitting] = useState(false);
@@ -66,7 +66,10 @@ function CheckoutPage() {
   return (
     <main className="flex-1">
       <div className="mx-auto w-full max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-muted-foreground">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-10 flex items-center gap-2 text-xs text-muted-foreground"
+        >
           <Link to="/cart" className="transition-colors hover:text-foreground">
             Bag
           </Link>
@@ -79,7 +82,9 @@ function CheckoutPage() {
           <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-olive">
             Secure checkout
           </p>
-          <h1 className="mt-3 font-display text-3xl font-medium text-brand-charcoal sm:text-4xl">Checkout</h1>
+          <h1 className="mt-3 font-display text-3xl font-medium text-brand-charcoal sm:text-4xl">
+            Checkout
+          </h1>
           <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
             <Lock aria-hidden="true" className="size-3.5 text-brand-forest" />
             Illustrative storefront — no payment is taken and no details are stored.
@@ -93,7 +98,13 @@ function CheckoutPage() {
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" name="email" type="email" required placeholder="you@example.com" />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                  />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="phone">Phone (optional)</Label>
@@ -103,7 +114,9 @@ function CheckoutPage() {
             </section>
 
             <section aria-label="Delivery address">
-              <h2 className="font-display text-lg font-medium text-brand-charcoal">Delivery address</h2>
+              <h2 className="font-display text-lg font-medium text-brand-charcoal">
+                Delivery address
+              </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                   <Label htmlFor="first-name">First name</Label>
@@ -129,7 +142,9 @@ function CheckoutPage() {
             </section>
 
             <section aria-label="Delivery method">
-              <h2 className="font-display text-lg font-medium text-brand-charcoal">Delivery method</h2>
+              <h2 className="font-display text-lg font-medium text-brand-charcoal">
+                Delivery method
+              </h2>
               <RadioGroup
                 value={shippingMethod}
                 onValueChange={setShippingMethod}
@@ -144,12 +159,18 @@ function CheckoutPage() {
                     <span className="flex items-center gap-3">
                       <RadioGroupItem id={`delivery-${option.id}`} value={option.id} />
                       <span>
-                        <span className="block text-sm font-medium text-brand-charcoal">{option.label}</span>
+                        <span className="block text-sm font-medium text-brand-charcoal">
+                          {option.label}
+                        </span>
                         <span className="block text-xs text-muted-foreground">{option.detail}</span>
                       </span>
                     </span>
                     <span className="text-sm font-medium text-brand-charcoal">
-                      {option.price === 0 ? (subtotal >= 120 ? "Free" : "£4.95") : formatPrice(option.price)}
+                      {option.price === 0
+                        ? subtotal >= 120
+                          ? "Free"
+                          : "£4.95"
+                        : formatPrice(option.price)}
                     </span>
                   </Label>
                 ))}
@@ -159,13 +180,17 @@ function CheckoutPage() {
             <section aria-label="Payment">
               <h2 className="font-display text-lg font-medium text-brand-charcoal">Payment</h2>
               <p className="mt-2 rounded-sm border border-dashed border-border bg-brand-sand/30 px-4 py-3 text-xs leading-5 text-muted-foreground">
-                This portfolio storefront does not process payments. In a live store, card details would be collected
-                here by a secure payment provider — never by the storefront itself.
+                This portfolio storefront does not process payments. In a live store, card details
+                would be collected here by a secure payment provider — never by the storefront
+                itself.
               </p>
             </section>
           </div>
 
-          <aside aria-label="Order summary" className="h-fit border border-border bg-brand-sand/30 p-6">
+          <aside
+            aria-label="Order summary"
+            className="h-fit border border-border bg-brand-sand/30 p-6"
+          >
             <h2 className="font-display text-lg font-medium text-brand-charcoal">Your order</h2>
             <ul className="mt-4 space-y-4">
               {lines.map((line) => {
@@ -186,7 +211,9 @@ function CheckoutPage() {
                         {line.quantity}
                       </span>
                     </span>
-                    <span className="min-w-0 flex-1 truncate text-sm text-brand-charcoal">{product.name}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm text-brand-charcoal">
+                      {product.name}
+                    </span>
                     <span className="text-sm font-medium text-brand-charcoal">
                       {formatPrice(product.price * line.quantity)}
                     </span>
@@ -210,7 +237,9 @@ function CheckoutPage() {
             <Separator className="my-4" />
             <div className="flex justify-between text-base">
               <p className="font-display font-medium text-brand-charcoal">Total</p>
-              <p className="font-display font-medium text-brand-charcoal">{formatPrice(orderTotal)}</p>
+              <p className="font-display font-medium text-brand-charcoal">
+                {formatPrice(orderTotal)}
+              </p>
             </div>
             <Button type="submit" className="mt-6 w-full" size="lg" disabled={submitting}>
               {submitting ? "Placing order…" : "Place order"}

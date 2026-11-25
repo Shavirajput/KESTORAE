@@ -16,7 +16,7 @@ export const Route = createFileRoute("/order-confirmation")({
 });
 
 function OrderConfirmationPage() {
-  const orderNumber = `KST-${new Date().getFullYear()}-0347`;
+  const orderNumber = "KST-2026-0347";
 
   return (
     <main className="flex-1">
@@ -32,8 +32,8 @@ function OrderConfirmationPage() {
             Thank you for your order.
           </h1>
           <p className="mt-4 text-base leading-7 text-muted-foreground">
-            Your illustrative order has been received. In a live store, a confirmation email would follow shortly with
-            your receipt and delivery updates.
+            Your illustrative order has been received. In a live store, a confirmation email would
+            follow shortly with your receipt and delivery updates.
           </p>
           <p className="mt-6 inline-block border border-border bg-brand-sand/30 px-4 py-2 text-sm text-muted-foreground">
             Order number <span className="font-medium text-brand-charcoal">{orderNumber}</span>
@@ -43,17 +43,22 @@ function OrderConfirmationPage() {
         <div className="mx-auto mt-12 grid max-w-2xl gap-4 sm:grid-cols-2">
           <div className="border border-border bg-background p-5">
             <Package aria-hidden="true" className="size-5 text-brand-forest" />
-            <h2 className="mt-3 font-display text-sm font-semibold uppercase text-brand-charcoal">What happens next</h2>
+            <h2 className="mt-3 font-display text-sm font-semibold uppercase text-brand-charcoal">
+              What happens next
+            </h2>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              Your pieces are checked, wrapped in protective packaging, and passed to the courier within one working day.
+              Your pieces are checked, wrapped in protective packaging, and passed to the courier
+              within one working day.
             </p>
           </div>
           <div className="border border-border bg-background p-5">
             <Truck aria-hidden="true" className="size-5 text-brand-forest" />
-            <h2 className="mt-3 font-display text-sm font-semibold uppercase text-brand-charcoal">Delivery</h2>
+            <h2 className="mt-3 font-display text-sm font-semibold uppercase text-brand-charcoal">
+              Delivery
+            </h2>
             <p className="mt-2 text-xs leading-5 text-muted-foreground">
-              Standard delivery arrives in 2–4 working days. You would receive tracking details as soon as the parcel
-              leaves the studio.
+              Standard delivery arrives in 2–4 working days. You would receive tracking details as
+              soon as the parcel leaves the studio.
             </p>
           </div>
         </div>
