@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { formatJournalDate, journalEntries } from "@/data/catalogue";
 import { storefrontHead } from "@/lib/storefront-meta";
@@ -79,11 +80,14 @@ function JournalPage() {
             className="group mt-10 grid gap-6 overflow-hidden rounded-lg border border-border bg-background p-4 transition-shadow hover:shadow-md sm:p-6 lg:grid-cols-2 lg:gap-10"
           >
             <div className="overflow-hidden rounded-sm bg-brand-sand/40">
-              <img
+              <ResponsivePicture
                 src={featured.image}
                 alt={featured.imageAlt}
-                width="760"
-                height="500"
+                sizes="(max-width: 1023px) calc(100vw - 4rem), 600px"
+                width={760}
+                height={500}
+                loading="eager"
+                decoding="sync"
                 fetchPriority="high"
                 className="aspect-[3/2] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
               />
@@ -123,11 +127,12 @@ function JournalPage() {
                 className="group block min-w-0"
               >
                 <div className="overflow-hidden rounded-md bg-brand-sand/40">
-                  <img
+                  <ResponsivePicture
                     src={entry.image}
                     alt={entry.imageAlt}
-                    width="700"
-                    height="384"
+                    sizes="(max-width: 639px) calc(100vw - 2rem), 620px"
+                    width={700}
+                    height={384}
                     loading="lazy"
                     className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
                   />

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
 import { ProductCard } from "@/components/storefront/ProductCard";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { EmptyState } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
@@ -76,11 +77,14 @@ function JournalEntryPage() {
           </header>
 
           <div className="mt-8 overflow-hidden rounded-lg border border-border/70 bg-brand-sand/40">
-            <img
+            <ResponsivePicture
               src={entry.image}
               alt={entry.imageAlt}
-              width="1152"
-              height="600"
+              sizes="(max-width: 767px) calc(100vw - 2rem), 768px"
+              width={1152}
+              height={600}
+              loading="eager"
+              decoding="sync"
               fetchPriority="high"
               className="aspect-[16/10] w-full object-cover"
             />
@@ -151,13 +155,15 @@ function JournalEntryPage() {
                 params={{ slug: item.slug }}
                 className="group flex flex-col gap-4 rounded-md border border-border bg-background p-4 transition-shadow hover:shadow-md sm:flex-row sm:items-center"
               >
-                <img
+                <ResponsivePicture
                   src={item.image}
                   alt={item.imageAlt}
-                  width="180"
-                  height="135"
+                  sizes="(max-width: 639px) calc(100vw - 4rem), 144px"
+                  width={180}
+                  height={135}
                   loading="lazy"
-                  className="aspect-[4/3] w-full shrink-0 rounded-sm object-cover sm:w-36"
+                  pictureClassName="block w-full shrink-0 sm:w-36"
+                  className="aspect-[4/3] w-full rounded-sm object-cover"
                 />
                 <div className="min-w-0">
                   <p className="font-display text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-olive">

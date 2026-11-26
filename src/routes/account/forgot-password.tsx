@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import livingSanctuary from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
+import { BrandLogo } from "@/components/storefront/BrandLogo";
 import { ForgotPasswordForm } from "@/components/storefront/ForgotPasswordForm";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
+import { IMAGES } from "@/lib/responsive-images";
 import { storefrontHead } from "@/lib/storefront-meta";
 
 export const Route = createFileRoute("/account/forgot-password")({
@@ -23,13 +25,17 @@ function ForgotPasswordPage() {
         className="grid min-h-[calc(100vh-7.5rem)] grid-cols-1 items-stretch md:grid-cols-[0.72fr_1.28fr] lg:grid-cols-2"
       >
         <div className="relative min-h-[15rem] overflow-hidden bg-brand-sand sm:min-h-[18rem] md:min-h-full">
-          <img
-            src={livingSanctuary}
+          <ResponsivePicture
+            asset={IMAGES.roomLivingSanctuary}
             alt="Quiet Scandinavian living corner with a natural oak armchair, linen curtains, and woven rug in soft daylight"
-            width={1600}
-            height={1067}
+            sizes="(max-width: 767px) 100vw, 50vw"
+            width={1200}
+            height={800}
+            loading="eager"
+            decoding="sync"
             fetchPriority="high"
-            className="absolute inset-0 size-full object-cover object-center"
+            pictureClassName="absolute inset-0 block size-full"
+            className="size-full object-cover object-center"
           />
           <div
             aria-hidden="true"
@@ -59,11 +65,8 @@ function ForgotPasswordPage() {
               aria-label="Kestorae home"
               className="mb-5 inline-block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-forest"
             >
-              <img
-                src="/assets/aistudio/KESTORAE_f8485794.png"
-                alt="Kestorae — Home & Lifestyle"
-                width={2172}
-                height={724}
+              <BrandLogo
+                priority
                 className="-ml-4 h-10 w-auto object-contain brightness-[1.08] contrast-[1.1] mix-blend-multiply sm:h-11"
               />
             </Link>

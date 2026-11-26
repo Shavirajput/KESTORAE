@@ -3,6 +3,7 @@ import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 
 import { FREE_DELIVERY_THRESHOLD, useCart } from "@/components/storefront/CartContext";
 import { ProductCard } from "@/components/storefront/ProductCard";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { AssuranceStrip } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
@@ -174,11 +175,12 @@ function CartPage() {
                       className="w-24 shrink-0 overflow-hidden rounded-sm bg-brand-sand/40 sm:w-32"
                       aria-label={product.name}
                     >
-                      <img
+                      <ResponsivePicture
                         src={product.image}
                         alt={product.imageAlt}
-                        width="128"
-                        height="128"
+                        sizes="(max-width: 639px) 96px, 128px"
+                        width={128}
+                        height={128}
                         loading="lazy"
                         className="aspect-square w-full object-cover"
                       />

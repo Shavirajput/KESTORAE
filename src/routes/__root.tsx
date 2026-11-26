@@ -10,9 +10,13 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import interLatinWoff2 from "@/assets/fonts/inter-latin-wght-normal.woff2";
+import montserratLatinWoff2 from "@/assets/fonts/montserrat-latin-wght-normal.woff2";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StorefrontLayout } from "@/components/storefront/StorefrontLayout";
+
+const CRITICAL_CSS = `@font-face{font-family:"Montserrat";font-style:normal;font-display:swap;font-weight:100 900;src:url("${montserratLatinWoff2}") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}@font-face{font-family:"Inter";font-style:normal;font-display:swap;font-weight:100 900;src:url("${interLatinWoff2}") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}html,body{margin:0;background-color:oklch(0.9796 0.0057 84.57);color:oklch(0.2891 0 89.88);font-family:"Inter",system-ui,-apple-system,sans-serif;overflow-x:clip;}`;
 
 function NotFoundComponent() {
   return (
@@ -96,16 +100,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       {
+        rel: "preload",
+        href: montserratLatinWoff2,
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        href: interLatinWoff2,
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "anonymous",
+      },
+      {
         rel: "stylesheet",
         href: appCss,
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap",
-      },
     ],
   }),
   shellComponent: RootShell,
@@ -118,6 +130,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <style id="kestorae-critical-css">{CRITICAL_CSS}</style>
         <HeadContent />
       </head>
       <body suppressHydrationWarning>
@@ -130,6 +143,12 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void import("@/lib/web-vitals").then(({ initWebVitalsMonitoring }) => {
+      initWebVitalsMonitoring();
+    });
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

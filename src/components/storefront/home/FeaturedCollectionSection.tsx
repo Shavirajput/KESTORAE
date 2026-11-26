@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, Heart, Plus } from "lucide-react";
 
 import { useCart } from "@/components/storefront/CartContext";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { useWishlist } from "@/components/storefront/WishlistContext";
 import { formatPrice, getProduct, type Product } from "@/data/catalogue";
 
@@ -136,11 +137,12 @@ export function FeaturedCollectionSection() {
                     aria-label={`View ${product.name}`}
                     className="block"
                   >
-                    <img
+                    <ResponsivePicture
                       src={product.image}
                       alt={product.imageAlt}
-                      width="640"
-                      height="480"
+                      sizes="(max-width: 639px) calc(100vw - 3.5rem), (max-width: 1023px) calc(50vw - 3rem), 300px"
+                      width={640}
+                      height={480}
                       loading="lazy"
                       className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
                     />

@@ -1,10 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
-import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
-import nordicWallHooksImage from "@/assets/images/nordic_wall_hooks_1795587775351.jpg";
-import productLinenThrowImage from "@/assets/images/product_linen_throw_1795587773679.jpg";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { formatJournalDate, getJournalEntry } from "@/data/catalogue";
+import { IMAGES } from "@/lib/responsive-images";
+
+const livingRoomImage = IMAGES.roomLivingSanctuary.src;
+const nordicWallHooksImage = IMAGES.nordicWallHooks.src;
+const productLinenThrowImage = IMAGES.productLinenThrow.src;
 
 type HomepageArticleConfig = {
   slug: string;
@@ -80,11 +83,12 @@ export function JournalSection() {
                 params={{ slug: entry.slug }}
                 className="block overflow-hidden rounded-md bg-brand-sand/50"
               >
-                <img
+                <ResponsivePicture
                   src={item.image}
                   alt={item.imageAlt}
-                  width="640"
-                  height="400"
+                  sizes="(max-width: 767px) calc(100vw - 2rem), 410px"
+                  width={640}
+                  height={400}
                   loading="lazy"
                   className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
                 />

@@ -1,8 +1,10 @@
-import bedroomImage from "@/assets/images/room_serene_bedroom_1795589413652.jpg";
-import diningImage from "@/assets/images/room_nordic_dining_1795589415366.jpg";
-import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
-import storageEntrywayImage from "@/assets/images/room_oak_entryway_1795589416360.jpg";
-import workspaceImage from "@/assets/images/room_quiet_workspace_1795589414448.jpg";
+import { IMAGES } from "@/lib/responsive-images";
+
+const bedroomImage = IMAGES.roomSereneBedroom.src;
+const diningImage = IMAGES.roomNordicDining.src;
+const livingRoomImage = IMAGES.roomLivingSanctuary.src;
+const storageEntrywayImage = IMAGES.roomOakEntryway.src;
+const workspaceImage = IMAGES.roomQuietWorkspace.src;
 
 export const rooms = [
   {

@@ -10,3 +10,14 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Performance Verification
+
+```sh
+npm run build
+npm run perf:budget
+npm run perf:lighthouse
+```
+
+See [PERFORMANCE.md](./PERFORMANCE.md) for Core Web Vitals field monitoring (`VITE_WEB_VITALS_ENDPOINT`), budget thresholds, and production CDN caching requirements.
+

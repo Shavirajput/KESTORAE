@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { getProductsForRoom } from "@/data/catalogue";
 import { rooms } from "@/data/storefront";
 
@@ -56,12 +57,18 @@ export function ShopByRoomSection() {
                   : "aspect-[4/3] lg:col-span-2"
               }`}
             >
-              <img
+              <ResponsivePicture
                 src={room.image}
                 alt={room.alt}
-                width="800"
-                height="540"
+                sizes={
+                  isFeaturedRow
+                    ? "(max-width: 639px) calc(100vw - 2rem), (max-width: 1023px) calc(50vw - 2rem), 630px"
+                    : "(max-width: 639px) calc(100vw - 2rem), (max-width: 1023px) calc(50vw - 2rem), 415px"
+                }
+                width={800}
+                height={540}
                 loading="lazy"
+                pictureClassName="block size-full"
                 className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
               />
               <div

@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 
-import heroLivingRoomImage from "@/assets/images/hero_scandinavian_living_1795588634148.jpg";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { Button } from "@/components/ui/button";
 import { formatPrice, getProduct } from "@/data/catalogue";
+import { HERO_IMAGE_SIZES, IMAGES } from "@/lib/responsive-images";
 
 const HERO_HIGHLIGHTS = [
   "Thoughtful Materials",
@@ -75,11 +76,14 @@ export function HeroSection() {
 
       <figure className="relative min-w-0">
         <div className="overflow-hidden rounded-lg bg-brand-sand/50 shadow-sm ring-1 ring-border/50">
-          <img
-            src={heroLivingRoomImage}
+          <ResponsivePicture
+            asset={IMAGES.heroLivingRoom}
             alt="A sunlit Scandinavian living room with a low oatmeal bouclé sofa, solid pale oak tables, matte stoneware vase, and warm limewash walls"
-            width="1200"
-            height="900"
+            sizes={HERO_IMAGE_SIZES}
+            width={1200}
+            height={900}
+            loading="eager"
+            decoding="sync"
             fetchPriority="high"
             className="aspect-[4/3] w-full object-cover lg:aspect-[5/4]"
           />
@@ -93,11 +97,15 @@ export function HeroSection() {
               className="group flex items-center gap-3.5 rounded-md border border-border/80 bg-brand-ivory/95 p-3 shadow-md backdrop-blur-sm transition-transform duration-200 hover:-translate-y-0.5 motion-reduce:transition-none"
             >
               <div className="size-14 shrink-0 overflow-hidden rounded-sm bg-brand-sand/50">
-                <img
+                <ResponsivePicture
                   src={featuredPiece.image}
                   alt={featuredPiece.imageAlt}
-                  width="112"
-                  height="112"
+                  sizes="56px"
+                  width={112}
+                  height={112}
+                  loading="eager"
+                  decoding="async"
+                  pictureClassName="block size-full"
                   className="size-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
                 />
               </div>

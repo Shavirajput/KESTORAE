@@ -4,6 +4,7 @@ import { Heart, Minus, PackageCheck, Plus, RotateCcw, Truck } from "lucide-react
 
 import { useCart } from "@/components/storefront/CartContext";
 import { ProductCard } from "@/components/storefront/ProductCard";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { AssuranceStrip, EmptyState } from "@/components/storefront/StorefrontSections";
 import { useWishlist } from "@/components/storefront/WishlistContext";
@@ -77,7 +78,8 @@ function ProductPage() {
 
   const activeVariantLabel = selectedVariant || variants[0]?.label || "Standard";
   const unitPrice = getVariantPrice(product, activeVariantLabel);
-  const activeImage = gallery[activeImageIndex] ?? gallery[0];
+  const activeImage = gallery[activeImageIndex] ??
+    gallery[0] ?? { src: product.image, alt: product.imageAlt };
   const isSaved = has(product.slug);
 
   const relatedRooms = rooms.filter((room) => product.rooms.includes(room.slug));
@@ -111,11 +113,14 @@ function ProductPage() {
         <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start lg:gap-14">
           <div className="min-w-0 lg:sticky lg:top-24">
             <figure className="relative overflow-hidden rounded-lg border border-border/70 bg-brand-sand/40">
-              <img
+              <ResponsivePicture
                 src={activeImage.src}
                 alt={activeImage.alt}
-                width="960"
-                height="768"
+                sizes="(max-width: 1023px) calc(100vw - 2rem), 680px"
+                width={960}
+                height={768}
+                loading="eager"
+                decoding="sync"
                 fetchPriority="high"
                 className="aspect-[5/4] w-full object-cover"
               />
@@ -147,11 +152,12 @@ function ProductPage() {
                           : "border-border opacity-80 hover:opacity-100"
                       }`}
                     >
-                      <img
+                      <ResponsivePicture
                         src={item.src}
                         alt=""
-                        width="320"
-                        height="240"
+                        sizes="(max-width: 1023px) 30vw, 220px"
+                        width={320}
+                        height={240}
                         loading="lazy"
                         className="aspect-[4/3] w-full object-cover"
                       />

@@ -12,7 +12,9 @@ import {
   X,
 } from "lucide-react";
 
+import { BrandLogo } from "@/components/storefront/BrandLogo";
 import { useCart } from "@/components/storefront/CartContext";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { useWishlist } from "@/components/storefront/WishlistContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -159,13 +161,7 @@ export function StorefrontHeader() {
           className="justify-self-center lg:justify-self-start"
           onClick={() => setMobileOpen(false)}
         >
-          <img
-            src="/assets/aistudio/KESTORAE_f8485794.png"
-            alt="Kestorae — Home & Lifestyle"
-            width={2172}
-            height={724}
-            className="h-11 w-auto object-contain brightness-[1.08] contrast-[1.1] mix-blend-multiply sm:h-12 lg:h-14"
-          />
+          <BrandLogo priority />
         </Link>
 
         <nav
@@ -402,9 +398,14 @@ export function StorefrontHeader() {
                           onClick={() => setWishlistOpen(false)}
                           className="size-12 shrink-0 overflow-hidden rounded-sm bg-brand-sand/50"
                         >
-                          <img
+                          <ResponsivePicture
                             src={product.image}
                             alt={product.imageAlt}
+                            sizes="48px"
+                            width={48}
+                            height={48}
+                            loading="lazy"
+                            pictureClassName="block size-full"
                             className="size-full object-cover"
                           />
                         </Link>

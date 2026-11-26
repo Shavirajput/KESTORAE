@@ -7,6 +7,7 @@ import {
   FREE_DELIVERY_THRESHOLD,
   useCart,
 } from "@/components/storefront/CartContext";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { EmptyState } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
@@ -431,11 +432,12 @@ function CheckoutPage() {
               {resolvedLines.map(({ line, product, unitPrice }) => (
                 <li key={line.key} className="flex items-center gap-3">
                   <span className="relative w-14 shrink-0">
-                    <img
+                    <ResponsivePicture
                       src={product.image}
                       alt={product.imageAlt}
-                      width="56"
-                      height="56"
+                      sizes="56px"
+                      width={56}
+                      height={56}
                       loading="lazy"
                       className="aspect-square w-full rounded-sm object-cover"
                     />

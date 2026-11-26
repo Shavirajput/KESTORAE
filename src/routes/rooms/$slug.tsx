@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 import { CatalogueFilterControls } from "@/components/storefront/CatalogueFilterControls";
 import { ProductCard } from "@/components/storefront/ProductCard";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { AssuranceStrip, EmptyState } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
@@ -121,11 +122,14 @@ function RoomPage() {
             </Button>
           </div>
           <div className="overflow-hidden rounded-lg border border-border/70 bg-brand-sand/50">
-            <img
+            <ResponsivePicture
               src={room.image}
               alt={room.alt}
-              width="760"
-              height="500"
+              sizes="(max-width: 1023px) calc(100vw - 2rem), 620px"
+              width={760}
+              height={500}
+              loading="eager"
+              decoding="sync"
               fetchPriority="high"
               className="aspect-[3/2] w-full object-cover"
             />

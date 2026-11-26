@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
-import studioMorningLightImage from "@/assets/images/studio_morning_light_1795587774868.jpg";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { Button } from "@/components/ui/button";
+import { IMAGES } from "@/lib/responsive-images";
 
 export function EditorialFeatureSection() {
   return (
@@ -12,12 +13,14 @@ export function EditorialFeatureSection() {
     >
       <div className="overflow-hidden rounded-xl border border-border/80 bg-brand-sand/45 lg:grid lg:grid-cols-[1.15fr_0.85fr]">
         <div className="relative min-w-0 bg-brand-sand/60">
-          <img
-            src={studioMorningLightImage}
+          <ResponsivePicture
+            asset={IMAGES.studioMorningLight}
             alt="A sunlit Scandinavian oak dining and studio table with morning window shadows across limewash walls"
-            width="1280"
-            height="720"
+            sizes="(max-width: 1023px) calc(100vw - 2rem), 720px"
+            width={1200}
+            height={800}
             loading="lazy"
+            pictureClassName="block lg:h-full"
             className="aspect-[16/10] w-full object-cover lg:aspect-auto lg:h-full"
           />
           <span className="absolute left-4 top-4 rounded-sm bg-brand-ivory/90 px-3 py-1 font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-charcoal backdrop-blur-xs sm:left-6 sm:top-6">

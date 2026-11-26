@@ -1,15 +1,17 @@
-import diningImage from "@/assets/images/room_nordic_dining_1795589415366.jpg";
-import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
-import bedroomImage from "@/assets/images/room_serene_bedroom_1795589413652.jpg";
-import workspaceImage from "@/assets/images/room_quiet_workspace_1795589414448.jpg";
-import storageEntrywayImage from "@/assets/images/room_oak_entryway_1795589416360.jpg";
-import productCeramicVaseImage from "@/assets/images/product_ceramic_vase_1795587772032.jpg";
-import productOakTableImage from "@/assets/images/product_oak_table_1795587773196.jpg";
-import productLinenThrowImage from "@/assets/images/product_linen_throw_1795587773679.jpg";
-import productStonewareSetImage from "@/assets/images/product_stoneware_set_1795587776125.jpg";
-import ceramicShelfDetailImage from "@/assets/images/ceramic_shelf_detail_1795587775947.jpg";
-import nordicWallHooksImage from "@/assets/images/nordic_wall_hooks_1795587775351.jpg";
-import studioMorningLightImage from "@/assets/images/studio_morning_light_1795587774868.jpg";
+import { IMAGES } from "@/lib/responsive-images";
+
+const diningImage = IMAGES.roomNordicDining.src;
+const livingRoomImage = IMAGES.roomLivingSanctuary.src;
+const bedroomImage = IMAGES.roomSereneBedroom.src;
+const workspaceImage = IMAGES.roomQuietWorkspace.src;
+const storageEntrywayImage = IMAGES.roomOakEntryway.src;
+const productCeramicVaseImage = IMAGES.productCeramicVase.src;
+const productOakTableImage = IMAGES.productOakTable.src;
+const productLinenThrowImage = IMAGES.productLinenThrow.src;
+const productStonewareSetImage = IMAGES.productStonewareSet.src;
+const ceramicShelfDetailImage = IMAGES.ceramicShelfDetail.src;
+const nordicWallHooksImage = IMAGES.nordicWallHooks.src;
+const studioMorningLightImage = IMAGES.studioMorningLight.src;
 
 import { rooms } from "@/data/storefront";
 import { matchProductsByQuery } from "@/lib/storefront-logic";

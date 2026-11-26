@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CircleCheck, Package, Truck } from "lucide-react";
 
 import { useCart } from "@/components/storefront/CartContext";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { AssuranceStrip } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
@@ -74,12 +75,15 @@ function OrderConfirmationPage() {
             <ul className="divide-y divide-border">
               {lastOrder.items.map((item) => (
                 <li key={item.key} className="flex items-center gap-4 py-4">
-                  <img
+                  <ResponsivePicture
                     src={item.image}
                     alt={item.name}
-                    width="56"
-                    height="56"
-                    className="size-14 shrink-0 rounded-sm object-cover"
+                    sizes="56px"
+                    width={56}
+                    height={56}
+                    loading="lazy"
+                    pictureClassName="block size-14 shrink-0"
+                    className="size-14 rounded-sm object-cover"
                   />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-display text-sm font-medium text-brand-charcoal">

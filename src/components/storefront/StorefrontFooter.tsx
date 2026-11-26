@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Globe } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
+import { BrandLogo } from "@/components/storefront/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { shopLinks } from "@/data/storefront";
@@ -39,13 +40,7 @@ export function StorefrontFooter() {
               Kestorae
             </h2>
             <Link to="/" aria-label="Kestorae home" className="-ml-4 inline-block">
-              <img
-                src="/assets/aistudio/KESTORAE_f8485794.png"
-                alt="Kestorae — Home & Lifestyle"
-                width={2172}
-                height={724}
-                className="h-12 w-auto object-contain brightness-[1.08] contrast-[1.1] mix-blend-multiply"
-              />
+              <BrandLogo className="h-12 w-auto object-contain brightness-[1.08] contrast-[1.1] mix-blend-multiply" />
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-6 text-muted-foreground">
               Thoughtfully designed home essentials that make everyday living more comfortable,

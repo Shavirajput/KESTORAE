@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Heart, House, Ruler, Sparkles } from "lucide-react";
 
-import heroImage from "@/assets/images/hero_scandinavian_living_1795588634148.jpg";
-import studioMorningLightImage from "@/assets/images/studio_morning_light_1795587774868.jpg";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
 import { StorefrontBreadcrumb } from "@/components/storefront/StorefrontBreadcrumb";
 import { AssuranceStrip } from "@/components/storefront/StorefrontSections";
 import { Button } from "@/components/ui/button";
+import { IMAGES } from "@/lib/responsive-images";
 import { storefrontHead } from "@/lib/storefront-meta";
 
 export const Route = createFileRoute("/about")({
@@ -101,11 +101,14 @@ function AboutPage() {
               </div>
             </div>
             <div className="overflow-hidden rounded-lg border border-border/70 bg-brand-sand/50">
-              <img
-                src={heroImage}
+              <ResponsivePicture
+                asset={IMAGES.heroLivingRoom}
                 alt="A softly lit living room with natural wood furniture"
-                width="760"
-                height="500"
+                sizes="(max-width: 1023px) calc(100vw - 2rem), 620px"
+                width={760}
+                height={500}
+                loading="eager"
+                decoding="sync"
                 fetchPriority="high"
                 className="aspect-[3/2] w-full object-cover"
               />
@@ -148,11 +151,12 @@ function AboutPage() {
       >
         <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-20">
           <div className="overflow-hidden rounded-lg border border-border/70 bg-background">
-            <img
-              src={studioMorningLightImage}
+            <ResponsivePicture
+              asset={IMAGES.studioMorningLight}
               alt="Sunlight across a solid oak studio table and stoneware vessels"
-              width="760"
-              height="500"
+              sizes="(max-width: 1023px) calc(100vw - 2rem), 620px"
+              width={760}
+              height={500}
               loading="lazy"
               className="aspect-[3/2] w-full object-cover"
             />

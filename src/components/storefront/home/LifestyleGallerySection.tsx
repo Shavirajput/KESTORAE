@@ -1,11 +1,14 @@
 import { Link } from "@tanstack/react-router";
 
-import bedroomImage from "@/assets/images/room_serene_bedroom_1795589413652.jpg";
-import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
-import ceramicShelfDetailImage from "@/assets/images/ceramic_shelf_detail_1795587775947.jpg";
-import nordicWallHooksImage from "@/assets/images/nordic_wall_hooks_1795587775351.jpg";
-import productCeramicVaseImage from "@/assets/images/product_ceramic_vase_1795587772032.jpg";
-import productStonewareSetImage from "@/assets/images/product_stoneware_set_1795587776125.jpg";
+import { ResponsivePicture } from "@/components/storefront/ResponsivePicture";
+import { IMAGES } from "@/lib/responsive-images";
+
+const bedroomImage = IMAGES.roomSereneBedroom.src;
+const livingRoomImage = IMAGES.roomLivingSanctuary.src;
+const ceramicShelfDetailImage = IMAGES.ceramicShelfDetail.src;
+const nordicWallHooksImage = IMAGES.nordicWallHooks.src;
+const productCeramicVaseImage = IMAGES.productCeramicVase.src;
+const productStonewareSetImage = IMAGES.productStonewareSet.src;
 
 type GalleryTile =
   | {
@@ -106,11 +109,12 @@ export function LifestyleGallerySection() {
           {GALLERY_TILES.map((tile) => {
             const tileContent = (
               <>
-                <img
+                <ResponsivePicture
                   src={tile.image}
                   alt={tile.alt}
-                  width="420"
-                  height="420"
+                  sizes="(max-width: 639px) calc(50vw - 1.5rem), (max-width: 1023px) calc(33vw - 2rem), 210px"
+                  width={420}
+                  height={420}
                   loading="lazy"
                   className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
                 />
