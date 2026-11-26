@@ -1,4 +1,14 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+
+const WISHLIST_STORAGE_KEY = "kestorae.wishlist.v1";
 
 type WishlistContextValue = {
   slugs: readonly string[];
@@ -13,6 +23,33 @@ const WishlistContext = createContext<WishlistContextValue | null>(null);
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
   const [slugs, setSlugs] = useState<readonly string[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(WISHLIST_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as unknown;
+        if (Array.isArray(parsed)) {
+          const valid = parsed.filter((item): item is string => typeof item === "string");
+          if (valid.length > 0) setSlugs(valid);
+        }
+      }
+    } catch {
+      // Ignore storage errors in restricted environments
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(slugs));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [slugs, hydrated]);
 
   const has = useCallback((slug: string) => slugs.includes(slug), [slugs]);
 

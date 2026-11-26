@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
-import livingRoomImage from "@/assets/living-room.png.asset.json";
+import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
 import nordicWallHooksImage from "@/assets/images/nordic_wall_hooks_1795587775351.jpg";
 import productLinenThrowImage from "@/assets/images/product_linen_throw_1795587773679.jpg";
 import { formatJournalDate, getJournalEntry } from "@/data/catalogue";
@@ -17,7 +17,7 @@ const HOMEPAGE_ARTICLES: readonly HomepageArticleConfig[] = [
   {
     slug: "slow-living",
     headline: "The Art of Slow Living at Home",
-    image: livingRoomImage.url,
+    image: livingRoomImage,
     imageAlt: "A softly lit Scandinavian living room with warm wood furniture and natural textures",
   },
   {

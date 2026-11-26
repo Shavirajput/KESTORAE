@@ -5,8 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { shopLinks } from "@/data/storefront";
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { isValidEmail } from "@/lib/storefront-logic";
 
 export function StorefrontFooter() {
   const [email, setEmail] = useState("");
@@ -16,8 +15,7 @@ export function StorefrontFooter() {
 
   const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmed = email.trim();
-    if (!EMAIL_PATTERN.test(trimmed)) {
+    if (!isValidEmail(email)) {
       setFeedback({
         kind: "error",
         message: "Please enter a valid email address to subscribe.",
@@ -28,7 +26,7 @@ export function StorefrontFooter() {
     setFeedback({
       kind: "success",
       message:
-        "Thank you for joining Considered Living. Newsletter signup is simulated in this frontend preview.",
+        "Thank you for joining Considered Living. You're subscribed for seasonal releases and journal notes.",
     });
   };
 
@@ -37,13 +35,19 @@ export function StorefrontFooter() {
       <div className="mx-auto max-w-[1320px] px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.25fr_0.85fr_0.85fr_1.35fr] lg:gap-10">
           <section aria-labelledby="footer-brand">
-            <h2
-              id="footer-brand"
-              className="font-display text-sm font-semibold uppercase tracking-[0.14em] text-brand-forest"
-            >
+            <h2 id="footer-brand" className="sr-only">
               Kestorae
             </h2>
-            <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">
+            <Link to="/" aria-label="Kestorae home" className="-ml-4 inline-block">
+              <img
+                src="/assets/aistudio/KESTORAE_f8485794.png"
+                alt="Kestorae — Home & Lifestyle"
+                width={2172}
+                height={724}
+                className="h-12 w-auto object-contain brightness-[1.08] contrast-[1.1] mix-blend-multiply"
+              />
+            </Link>
+            <p className="mt-3 max-w-xs text-sm leading-6 text-muted-foreground">
               Thoughtfully designed home essentials that make everyday living more comfortable,
               organised and calm.
             </p>
@@ -95,17 +99,17 @@ export function StorefrontFooter() {
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <Link to="/about" className="footer-link">
+                <Link to="/about" hash="philosophy" className="footer-link">
                   Our Philosophy
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="footer-link">
+                <Link to="/about" hash="responsible-choices" className="footer-link">
                   Responsible Choices
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="footer-link">
+                <Link to="/about" hash="materials" className="footer-link">
                   Materials &amp; Craft
                 </Link>
               </li>
@@ -115,8 +119,8 @@ export function StorefrontFooter() {
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="footer-link">
-                  Careers
+                <Link to="/about" hash="studio" className="footer-link">
+                  Studio &amp; Careers
                 </Link>
               </li>
             </ul>
@@ -153,6 +157,7 @@ export function StorefrontFooter() {
                 }}
                 placeholder="Your email address"
                 aria-invalid={feedback?.kind === "error"}
+                aria-describedby={feedback ? "newsletter-feedback" : undefined}
                 className="h-10 min-w-0 flex-1 rounded-sm border-border bg-background text-sm"
               />
               <Button
@@ -164,6 +169,7 @@ export function StorefrontFooter() {
             </form>
             {feedback ? (
               <p
+                id="newsletter-feedback"
                 role="status"
                 className={`mt-2.5 text-xs leading-5 ${
                   feedback.kind === "error" ? "text-brand-terracotta" : "text-brand-forest"
@@ -190,7 +196,7 @@ export function StorefrontFooter() {
                   Returns
                 </Link>
                 <span aria-hidden="true">•</span>
-                <Link to="/support" className="footer-link">
+                <Link to="/support" hash="order-tracking" className="footer-link">
                   Order Tracking
                 </Link>
               </div>

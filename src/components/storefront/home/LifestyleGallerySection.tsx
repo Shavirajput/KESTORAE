@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
-import bedroomImage from "@/assets/bedroom.png.asset.json";
-import livingRoomImage from "@/assets/living-room.png.asset.json";
+import bedroomImage from "@/assets/images/room_serene_bedroom_1795589413652.jpg";
+import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
 import ceramicShelfDetailImage from "@/assets/images/ceramic_shelf_detail_1795587775947.jpg";
 import nordicWallHooksImage from "@/assets/images/nordic_wall_hooks_1795587775351.jpg";
 import productCeramicVaseImage from "@/assets/images/product_ceramic_vase_1795587772032.jpg";
@@ -29,7 +29,7 @@ const GALLERY_TILES: readonly GalleryTile[] = [
   {
     id: "living-room-styling",
     label: "Living Room Styling",
-    image: livingRoomImage.url,
+    image: livingRoomImage,
     alt: "Calm Scandinavian living room styled with natural oak furniture and linen upholstery",
     kind: "room",
     slug: "living-room",
@@ -45,7 +45,7 @@ const GALLERY_TILES: readonly GalleryTile[] = [
   {
     id: "bedroom-textiles",
     label: "Bedroom Textiles",
-    image: bedroomImage.url,
+    image: bedroomImage,
     alt: "Softly layered neutral linen bedding and warm oak accents in a quiet bedroom",
     kind: "room",
     slug: "bedroom",

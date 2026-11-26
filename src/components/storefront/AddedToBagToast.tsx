@@ -17,7 +17,7 @@ export function AddedToBagToast() {
       return;
     }
     setVisible(true);
-    timer.current = window.setTimeout(() => setVisible(false), 4000);
+    timer.current = window.setTimeout(() => setVisible(false), 4500);
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
@@ -33,7 +33,7 @@ export function AddedToBagToast() {
   return (
     <aside
       aria-live="polite"
-      className={`fixed bottom-4 right-4 z-50 w-[calc(100%-2rem)] max-w-sm border border-border bg-background p-4 shadow-lg transition-all duration-300 motion-reduce:transition-none sm:bottom-6 sm:right-6 ${
+      className={`fixed bottom-4 right-4 z-50 w-[calc(100%-2rem)] max-w-sm rounded-md border border-border bg-background p-4 shadow-lg transition-all duration-300 motion-reduce:transition-none sm:bottom-6 sm:right-6 ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
       }`}
     >
@@ -41,9 +41,16 @@ export function AddedToBagToast() {
         <CircleCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-brand-forest" />
         <div className="min-w-0 flex-1">
           <p className="font-display text-sm font-medium text-brand-charcoal">Added to your bag</p>
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">{lastAdded.name}</p>
-          <div className="mt-3 flex gap-2">
-            <Button asChild size="sm">
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+            {lastAdded.quantity > 1 ? `${lastAdded.quantity} × ` : ""}
+            {lastAdded.product.name} · {lastAdded.variant}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              asChild
+              size="sm"
+              className="rounded-sm bg-brand-forest text-brand-ivory hover:bg-brand-forest/90"
+            >
               <Link to="/cart" onClick={handleClose}>
                 View bag
               </Link>
@@ -52,6 +59,7 @@ export function AddedToBagToast() {
               type="button"
               size="sm"
               variant="outline"
+              className="rounded-sm"
               onClick={() => {
                 handleClose();
                 void navigate({ to: "/checkout" });

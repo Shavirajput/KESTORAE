@@ -1,9 +1,59 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
-import { getProduct, type Product } from "@/data/catalogue";
+import { getProduct, getProductVariants, getVariantPrice, type Product } from "@/data/catalogue";
+import {
+  EXPRESS_DELIVERY_FEE,
+  FREE_DELIVERY_THRESHOLD,
+  STANDARD_DELIVERY_FEE,
+  calculateCartTotals,
+  makeCartLineKey,
+  type ShippingMethod,
+} from "@/lib/storefront-logic";
+
+const CART_STORAGE_KEY = "kestorae.cart.v1";
+const LAST_ORDER_STORAGE_KEY = "kestorae.lastOrder.v1";
 
 export type CartLine = {
+  key: string;
   slug: string;
+  variant: string;
+  quantity: number;
+};
+
+export type PlacedOrderItem = {
+  key: string;
+  slug: string;
+  name: string;
+  variant: string;
+  quantity: number;
+  unitPrice: number;
+  image: string;
+};
+
+export type PlacedOrder = {
+  orderNumber: string;
+  placedAt: string;
+  email: string;
+  customerName: string;
+  addressSummary: string;
+  shippingMethod: ShippingMethod;
+  items: readonly PlacedOrderItem[];
+  subtotal: number;
+  delivery: number;
+  total: number;
+};
+
+type LastAddedItem = {
+  product: Product;
+  variant: string;
   quantity: number;
 };
 
@@ -13,49 +63,111 @@ type CartContextValue = {
   subtotal: number;
   delivery: number;
   total: number;
-  lastAdded: Product | null;
-  add: (slug: string, quantity?: number) => void;
-  setQuantity: (slug: string, quantity: number) => void;
-  remove: (slug: string) => void;
+  remainingForFreeDelivery: number;
+  lastAdded: LastAddedItem | null;
+  lastOrder: PlacedOrder | null;
+  add: (slug: string, quantity?: number, variant?: string) => void;
+  setQuantity: (keyOrSlug: string, quantity: number) => void;
+  remove: (keyOrSlug: string) => void;
   clear: () => void;
+  recordOrder: (order: PlacedOrder) => void;
   dismissLastAdded: () => void;
 };
-
-const FREE_DELIVERY_THRESHOLD = 120;
-const DELIVERY_FEE = 4.95;
 
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<readonly CartLine[]>([]);
-  const [lastAdded, setLastAdded] = useState<Product | null>(null);
+  const [lastAdded, setLastAdded] = useState<LastAddedItem | null>(null);
+  const [lastOrder, setLastOrder] = useState<PlacedOrder | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
-  const add = useCallback((slug: string, quantity = 1) => {
-    const product = getProduct(slug);
-    if (!product) return;
-    setLines((current) => {
-      const existing = current.find((line) => line.slug === slug);
-      if (existing) {
-        return current.map((line) =>
-          line.slug === slug ? { ...line, quantity: Math.min(line.quantity + quantity, 99) } : line,
-        );
+  useEffect(() => {
+    try {
+      const savedLines = window.localStorage.getItem(CART_STORAGE_KEY);
+      if (savedLines) {
+        const parsed = JSON.parse(savedLines) as unknown;
+        if (Array.isArray(parsed)) {
+          const valid = parsed.filter(
+            (item): item is CartLine =>
+              Boolean(item) &&
+              typeof item === "object" &&
+              typeof (item as CartLine).key === "string" &&
+              typeof (item as CartLine).slug === "string" &&
+              typeof (item as CartLine).variant === "string" &&
+              typeof (item as CartLine).quantity === "number" &&
+              (item as CartLine).quantity > 0 &&
+              Boolean(getProduct((item as CartLine).slug)),
+          );
+          if (valid.length > 0) setLines(valid);
+        }
       }
-      return [...current, { slug, quantity: Math.min(quantity, 99) }];
-    });
-    setLastAdded(product);
+      const savedOrder = window.localStorage.getItem(LAST_ORDER_STORAGE_KEY);
+      if (savedOrder) {
+        const parsedOrder = JSON.parse(savedOrder) as PlacedOrder;
+        if (parsedOrder && typeof parsedOrder.orderNumber === "string") {
+          setLastOrder(parsedOrder);
+        }
+      }
+    } catch {
+      // Ignore storage errors in restricted environments
+    } finally {
+      setHydrated(true);
+    }
   }, []);
 
-  const setQuantity = useCallback((slug: string, quantity: number) => {
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(lines));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [lines, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || !lastOrder) return;
+    try {
+      window.localStorage.setItem(LAST_ORDER_STORAGE_KEY, JSON.stringify(lastOrder));
+    } catch {
+      // Ignore storage quota errors
+    }
+  }, [lastOrder, hydrated]);
+
+  const add = useCallback((slug: string, quantity = 1, variant?: string) => {
+    const product = getProduct(slug);
+    if (!product) return;
+    const resolvedVariant = variant?.trim() || getProductVariants(product)[0]?.label || "Standard";
+    const key = makeCartLineKey(slug, resolvedVariant);
     setLines((current) => {
-      if (quantity <= 0) return current.filter((line) => line.slug !== slug);
+      const existing = current.find((line) => line.key === key);
+      if (existing) {
+        return current.map((line) =>
+          line.key === key ? { ...line, quantity: Math.min(line.quantity + quantity, 99) } : line,
+        );
+      }
+      return [
+        ...current,
+        { key, slug, variant: resolvedVariant, quantity: Math.min(quantity, 99) },
+      ];
+    });
+    setLastAdded({ product, variant: resolvedVariant, quantity });
+  }, []);
+
+  const setQuantity = useCallback((keyOrSlug: string, quantity: number) => {
+    setLines((current) => {
+      const matches = (line: CartLine) => line.key === keyOrSlug || line.slug === keyOrSlug;
+      if (quantity <= 0) return current.filter((line) => !matches(line));
       return current.map((line) =>
-        line.slug === slug ? { ...line, quantity: Math.min(quantity, 99) } : line,
+        matches(line) ? { ...line, quantity: Math.min(quantity, 99) } : line,
       );
     });
   }, []);
 
-  const remove = useCallback((slug: string) => {
-    setLines((current) => current.filter((line) => line.slug !== slug));
+  const remove = useCallback((keyOrSlug: string) => {
+    setLines((current) =>
+      current.filter((line) => line.key !== keyOrSlug && line.slug !== keyOrSlug),
+    );
   }, []);
 
   const clear = useCallback(() => {
@@ -63,29 +175,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setLastAdded(null);
   }, []);
 
+  const recordOrder = useCallback((order: PlacedOrder) => {
+    setLastOrder(order);
+  }, []);
+
   const dismissLastAdded = useCallback(() => setLastAdded(null), []);
 
   const value = useMemo<CartContextValue>(() => {
-    const count = lines.reduce((sum, line) => sum + line.quantity, 0);
-    const subtotal = lines.reduce((sum, line) => {
-      const product = getProduct(line.slug);
-      return product ? sum + product.price * line.quantity : sum;
-    }, 0);
-    const delivery = subtotal === 0 || subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
+    const priceableLines = lines
+      .map((line) => {
+        const product = getProduct(line.slug);
+        if (!product) return null;
+        return {
+          unitPrice: getVariantPrice(product, line.variant),
+          quantity: line.quantity,
+        };
+      })
+      .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+
+    const totals = calculateCartTotals(priceableLines, "standard");
+
     return {
       lines,
-      count,
-      subtotal,
-      delivery,
-      total: subtotal + delivery,
+      count: totals.itemCount,
+      subtotal: totals.subtotal,
+      delivery: totals.delivery,
+      total: totals.total,
+      remainingForFreeDelivery: totals.remainingForFreeDelivery,
       lastAdded,
+      lastOrder,
       add,
       setQuantity,
       remove,
       clear,
+      recordOrder,
       dismissLastAdded,
     };
-  }, [lines, lastAdded, add, setQuantity, remove, clear, dismissLastAdded]);
+  }, [lines, lastAdded, lastOrder, add, setQuantity, remove, clear, recordOrder, dismissLastAdded]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
@@ -96,4 +222,4 @@ export function useCart() {
   return context;
 }
 
-export { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE };
+export { FREE_DELIVERY_THRESHOLD, STANDARD_DELIVERY_FEE as DELIVERY_FEE, EXPRESS_DELIVERY_FEE };

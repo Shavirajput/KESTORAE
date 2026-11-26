@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   ArrowRight,
   ChevronDown,
   Heart,
+  LifeBuoy,
   Menu,
+  Package,
   Search,
   ShoppingBag,
   Trash2,
@@ -16,9 +18,8 @@ import { useCart } from "@/components/storefront/CartContext";
 import { useWishlist } from "@/components/storefront/WishlistContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatPrice, getProduct } from "@/data/catalogue";
+import { collections, formatPrice, getProduct } from "@/data/catalogue";
 import { rooms } from "@/data/storefront";
-import kestoraeLogo from "@/assets/kestorae-logo.png.asset.json";
 
 type SearchFormProps = {
   id: string;
@@ -26,9 +27,10 @@ type SearchFormProps = {
   onQueryChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   className?: string;
+  autoFocus?: boolean;
 };
 
-function SearchForm({ id, query, onQueryChange, onSubmit, className }: SearchFormProps) {
+function SearchForm({ id, query, onQueryChange, onSubmit, className, autoFocus }: SearchFormProps) {
   return (
     <form onSubmit={onSubmit} role="search" className={className}>
       <label htmlFor={id} className="sr-only">
@@ -38,6 +40,7 @@ function SearchForm({ id, query, onQueryChange, onSubmit, className }: SearchFor
         id={id}
         name="q"
         type="search"
+        autoFocus={autoFocus}
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
         placeholder="Search considered living..."
@@ -52,32 +55,51 @@ function SearchForm({ id, query, onQueryChange, onSubmit, className }: SearchFor
 
 export function StorefrontHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [roomsOpen, setRoomsOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
-  const [logoFailed, setLogoFailed] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
-  const logoImgRef = useRef<HTMLImageElement | null>(null);
+
+  const roomsRef = useRef<HTMLDivElement | null>(null);
   const wishlistRef = useRef<HTMLDivElement | null>(null);
+  const accountRef = useRef<HTMLDivElement | null>(null);
+
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   const { count: cartCount } = useCart();
   const { slugs: wishlistSlugs, count: wishlistCount, remove: removeWishlist } = useWishlist();
 
   useEffect(() => {
-    const img = logoImgRef.current;
-    if (img && img.complete && img.naturalWidth === 0) {
-      setLogoFailed(true);
-    }
-  }, []);
+    setMobileOpen(false);
+    setMobileSearchOpen(false);
+    setRoomsOpen(false);
+    setWishlistOpen(false);
+    setAccountOpen(false);
+    setNotice("");
+  }, [pathname]);
 
   useEffect(() => {
-    if (!wishlistOpen) return;
+    if (!roomsOpen && !wishlistOpen && !accountOpen) return;
     const handlePointerDown = (event: MouseEvent) => {
-      if (wishlistRef.current && !wishlistRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (roomsOpen && roomsRef.current && !roomsRef.current.contains(target)) {
+        setRoomsOpen(false);
+      }
+      if (wishlistOpen && wishlistRef.current && !wishlistRef.current.contains(target)) {
         setWishlistOpen(false);
+      }
+      if (accountOpen && accountRef.current && !accountRef.current.contains(target)) {
+        setAccountOpen(false);
       }
     };
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setWishlistOpen(false);
+      if (event.key === "Escape") {
+        setRoomsOpen(false);
+        setWishlistOpen(false);
+        setAccountOpen(false);
+      }
     };
     document.addEventListener("mousedown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
@@ -85,7 +107,7 @@ export function StorefrontHeader() {
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [wishlistOpen]);
+  }, [roomsOpen, wishlistOpen, accountOpen]);
 
   const savedProducts = wishlistSlugs
     .map((slug) => getProduct(slug))
@@ -95,22 +117,31 @@ export function StorefrontHeader() {
     event.preventDefault();
     const term = query.trim();
     if (!term) {
-      setNotice("Enter a search term to explore the catalogue.");
+      setNotice("Enter a keyword such as linen, oak, or lighting to search the catalogue.");
       return;
     }
     setNotice("");
     setMobileOpen(false);
+    setMobileSearchOpen(false);
     void navigate({ to: "/search", search: { q: term } });
   };
 
-  const showPreviewMessage = (label: string) => {
-    setWishlistOpen(false);
-    setNotice(`${label} is not connected in this storefront preview.`);
-  };
+  const isHomeActive = pathname === "/";
+  const isShopActive = pathname === "/shop" || pathname.startsWith("/collections");
+  const isRoomsActive = pathname.startsWith("/rooms");
+  const isJournalActive = pathname.startsWith("/journal");
+  const isAboutActive = pathname === "/about";
+
+  const navLinkClass = (active: boolean) =>
+    `nav-link relative whitespace-nowrap ${
+      active
+        ? "text-brand-forest font-semibold after:absolute after:inset-x-0 after:bottom-1 after:h-[1.5px] after:bg-brand-forest"
+        : ""
+    }`;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur-sm">
-      <div className="mx-auto grid max-w-[1320px] grid-cols-[2.75rem_1fr_auto] items-center gap-2 px-4 py-3.5 sm:px-6 lg:grid-cols-[11rem_1fr_auto] lg:px-8">
+      <div className="mx-auto grid max-w-[1320px] grid-cols-[2.75rem_1fr_auto] items-center gap-2 px-4 py-2 sm:px-6 lg:grid-cols-[13rem_1fr_auto] lg:px-8">
         <div className="lg:hidden">
           <Button
             type="button"
@@ -119,7 +150,13 @@ export function StorefrontHeader() {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
-            onClick={() => setMobileOpen((open) => !open)}
+            onClick={() => {
+              setMobileSearchOpen(false);
+              setWishlistOpen(false);
+              setAccountOpen(false);
+              setMobileOpen((open) => !open);
+            }}
+            className="size-10"
           >
             {mobileOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </Button>
@@ -131,71 +168,134 @@ export function StorefrontHeader() {
           className="justify-self-center lg:justify-self-start"
           onClick={() => setMobileOpen(false)}
         >
-          {logoFailed ? (
-            <span className="inline-flex items-baseline gap-2 whitespace-nowrap">
-              <span className="font-display text-base font-semibold uppercase tracking-[0.16em] text-brand-charcoal sm:text-lg">
-                Kestorae
-              </span>
-              <span className="hidden font-display text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:inline">
-                Nordic Living
-              </span>
-            </span>
-          ) : (
-            <img
-              ref={logoImgRef}
-              src={kestoraeLogo.url}
-              alt="Kestorae — Home & Lifestyle"
-              width="2172"
-              height="724"
-              onError={() => setLogoFailed(true)}
-              className="h-auto w-36 sm:w-40"
-            />
-          )}
+          <img
+            src="/assets/aistudio/KESTORAE_f8485794.png"
+            alt="Kestorae — Home & Lifestyle"
+            width={2172}
+            height={724}
+            className="h-11 w-auto object-contain brightness-[1.08] contrast-[1.1] mix-blend-multiply sm:h-12 lg:h-14"
+          />
         </Link>
 
         <nav
           aria-label="Main navigation"
-          className="hidden items-center justify-center gap-6 lg:flex"
+          className="hidden items-center justify-center gap-7 lg:flex"
         >
-          <Link to="/" className="nav-link whitespace-nowrap">
+          <Link
+            to="/"
+            aria-current={isHomeActive ? "page" : undefined}
+            className={navLinkClass(isHomeActive)}
+          >
             Home
           </Link>
-          <Link to="/shop" className="nav-link whitespace-nowrap">
+          <Link
+            to="/shop"
+            aria-current={isShopActive ? "page" : undefined}
+            className={navLinkClass(isShopActive)}
+          >
             Shop
           </Link>
-          <details className="group relative">
-            <summary className="nav-link flex cursor-pointer list-none items-center gap-1 whitespace-nowrap">
-              Rooms{" "}
+
+          <div ref={roomsRef} className="relative">
+            <button
+              type="button"
+              aria-expanded={roomsOpen}
+              aria-controls="rooms-mega-menu"
+              onClick={() => {
+                setWishlistOpen(false);
+                setAccountOpen(false);
+                setRoomsOpen((open) => !open);
+              }}
+              className={`${navLinkClass(isRoomsActive)} cursor-pointer gap-1`}
+            >
+              Rooms
               <ChevronDown
                 aria-hidden="true"
-                className="size-3.5 transition-transform group-open:rotate-180"
+                className={`size-3.5 transition-transform duration-150 ${roomsOpen ? "rotate-180" : ""}`}
               />
-            </summary>
-            <div className="absolute left-0 top-full z-50 mt-3 w-64 rounded-md border border-border bg-background p-2 shadow-lg">
-              <ul className="space-y-0.5">
-                {rooms.map((room) => (
-                  <li key={room.slug}>
+            </button>
+
+            {roomsOpen ? (
+              <div
+                id="rooms-mega-menu"
+                role="region"
+                aria-label="Shop by room and collections"
+                className="absolute left-1/2 top-full z-50 mt-3 w-[34rem] -translate-x-1/2 rounded-md border border-border bg-background p-5 shadow-xl"
+              >
+                <div className="grid grid-cols-[1.35fr_1fr] gap-6">
+                  <div>
+                    <p className="font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-olive">
+                      Spaces of Refuge
+                    </p>
+                    <ul className="mt-3 space-y-1">
+                      {rooms.map((room) => (
+                        <li key={room.slug}>
+                          <Link
+                            to="/rooms/$slug"
+                            params={{ slug: room.slug }}
+                            onClick={() => setRoomsOpen(false)}
+                            className="group block rounded-sm px-2.5 py-2 transition-colors hover:bg-brand-sand/55"
+                          >
+                            <span className="block font-display text-xs font-medium text-brand-charcoal group-hover:text-brand-forest">
+                              {room.title}
+                            </span>
+                            <span className="mt-0.5 block text-[11px] leading-4 text-muted-foreground">
+                              {room.description}
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="border-l border-border/80 pl-5">
+                    <p className="font-display text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-olive">
+                      Curated Edits
+                    </p>
+                    <ul className="mt-3 space-y-1">
+                      {collections.map((collection) => (
+                        <li key={collection.slug}>
+                          <Link
+                            to="/collections/$slug"
+                            params={{ slug: collection.slug }}
+                            onClick={() => setRoomsOpen(false)}
+                            className="block rounded-sm px-2.5 py-1.5 text-xs text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
+                          >
+                            {collection.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                     <Link
-                      to="/rooms/$slug"
-                      params={{ slug: room.slug }}
-                      className="block rounded-sm px-3 py-2 text-sm text-brand-charcoal transition-colors hover:bg-brand-sand/60"
+                      to="/shop"
+                      onClick={() => setRoomsOpen(false)}
+                      className="mt-4 inline-flex items-center gap-1.5 px-2.5 font-display text-[11px] font-semibold text-brand-forest hover:text-brand-charcoal"
                     >
-                      {room.title}
+                      View full shop <ArrowRight aria-hidden="true" className="size-3" />
                     </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </details>
-          <Link to="/journal" className="nav-link whitespace-nowrap">
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <Link
+            to="/journal"
+            aria-current={isJournalActive ? "page" : undefined}
+            className={navLinkClass(isJournalActive)}
+          >
             Journal
           </Link>
-          <Link to="/about" className="nav-link whitespace-nowrap">
+          <Link
+            to="/about"
+            aria-current={isAboutActive ? "page" : undefined}
+            className={navLinkClass(isAboutActive)}
+          >
             About
           </Link>
         </nav>
 
-        <div className="flex items-center justify-self-end gap-1">
+        <div className="flex items-center justify-self-end gap-0.5 sm:gap-1">
           <SearchForm
             id="desktop-search"
             query={query}
@@ -203,15 +303,110 @@ export function StorefrontHeader() {
             onSubmit={handleSearch}
             className="mr-1 hidden w-56 items-center xl:flex"
           />
+
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            aria-label="Account preview"
-            onClick={() => showPreviewMessage("Account access")}
+            aria-label={mobileSearchOpen ? "Close search" : "Open search"}
+            aria-expanded={mobileSearchOpen}
+            aria-controls="compact-search-panel"
+            onClick={() => {
+              setMobileOpen(false);
+              setWishlistOpen(false);
+              setAccountOpen(false);
+              setNotice("");
+              setMobileSearchOpen((open) => !open);
+            }}
+            className="size-10 xl:hidden"
           >
-            <UserRound aria-hidden="true" className="size-[18px]" />
+            {mobileSearchOpen ? (
+              <X aria-hidden="true" className="size-[18px]" />
+            ) : (
+              <Search aria-hidden="true" className="size-[18px]" />
+            )}
           </Button>
+
+          <div ref={accountRef} className="relative">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Studio care and quick links"
+              aria-expanded={accountOpen}
+              aria-controls="header-account-panel"
+              onClick={() => {
+                setRoomsOpen(false);
+                setWishlistOpen(false);
+                setMobileSearchOpen(false);
+                setNotice("");
+                setAccountOpen((open) => !open);
+              }}
+              className="size-10"
+            >
+              <UserRound aria-hidden="true" className="size-[18px]" />
+            </Button>
+
+            {accountOpen ? (
+              <div
+                id="header-account-panel"
+                role="region"
+                aria-label="Customer care and account links"
+                className="absolute right-0 top-full z-50 mt-2.5 w-[min(17rem,calc(100vw-2rem))] rounded-md border border-border bg-background p-4 shadow-xl"
+              >
+                <div className="flex items-center justify-between border-b border-border pb-2.5">
+                  <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-charcoal">
+                    Kestorae Care
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setAccountOpen(false)}
+                    aria-label="Close quick menu"
+                    className="rounded-sm p-1 text-muted-foreground transition-colors hover:text-brand-charcoal"
+                  >
+                    <X aria-hidden="true" className="size-3.5" />
+                  </button>
+                </div>
+                <p className="mt-2.5 text-xs leading-5 text-muted-foreground">
+                  Guest checkout is active — no account is required to browse, save pieces, or place
+                  an illustrative order.
+                </p>
+                <ul className="mt-3 space-y-1 text-xs">
+                  <li>
+                    <Link
+                      to="/cart"
+                      onClick={() => setAccountOpen(false)}
+                      className="flex items-center gap-2 rounded-sm px-2 py-2 text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
+                    >
+                      <ShoppingBag aria-hidden="true" className="size-3.5 text-brand-forest" />
+                      Shopping bag ({cartCount})
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/support"
+                      hash="order-tracking"
+                      onClick={() => setAccountOpen(false)}
+                      className="flex items-center gap-2 rounded-sm px-2 py-2 text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
+                    >
+                      <Package aria-hidden="true" className="size-3.5 text-brand-forest" />
+                      Order tracking &amp; delivery
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/support"
+                      onClick={() => setAccountOpen(false)}
+                      className="flex items-center gap-2 rounded-sm px-2 py-2 text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
+                    >
+                      <LifeBuoy aria-hidden="true" className="size-3.5 text-brand-forest" />
+                      Customer care &amp; FAQs
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            ) : null}
+          </div>
 
           <div ref={wishlistRef} className="relative">
             <Button
@@ -222,17 +417,20 @@ export function StorefrontHeader() {
               aria-expanded={wishlistOpen}
               aria-controls="header-wishlist-panel"
               onClick={() => {
+                setRoomsOpen(false);
+                setAccountOpen(false);
+                setMobileSearchOpen(false);
                 setNotice("");
                 setWishlistOpen((open) => !open);
               }}
-              className="relative"
+              className="relative size-10"
             >
               <Heart
                 aria-hidden="true"
                 className={`size-[18px] transition-colors ${wishlistCount > 0 ? "fill-brand-forest text-brand-forest" : ""}`}
               />
               {wishlistCount > 0 ? (
-                <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-brand-forest font-display text-[10px] font-semibold leading-none text-brand-ivory">
+                <span className="absolute right-0.5 top-0.5 flex size-4 items-center justify-center rounded-full bg-brand-forest font-display text-[10px] font-semibold leading-none tabular-nums text-brand-ivory ring-2 ring-background">
                   {wishlistCount}
                 </span>
               ) : null}
@@ -243,7 +441,7 @@ export function StorefrontHeader() {
                 id="header-wishlist-panel"
                 role="region"
                 aria-label="Saved pieces"
-                className="absolute right-0 top-full z-50 mt-2.5 w-80 rounded-md border border-border bg-background p-4 shadow-xl"
+                className="absolute right-0 top-full z-50 mt-2.5 w-[min(20rem,calc(100vw-2rem))] rounded-md border border-border bg-background p-4 shadow-xl"
               >
                 <div className="flex items-center justify-between border-b border-border pb-2.5">
                   <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-charcoal">
@@ -325,12 +523,12 @@ export function StorefrontHeader() {
             variant="ghost"
             size="icon"
             aria-label={`Shopping bag (${cartCount} ${cartCount === 1 ? "item" : "items"})`}
-            className="relative"
+            className="relative size-10"
           >
             <Link to="/cart">
               <ShoppingBag aria-hidden="true" className="size-[18px]" />
               {cartCount > 0 ? (
-                <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-brand-forest font-display text-[10px] font-semibold leading-none text-brand-ivory">
+                <span className="absolute right-0.5 top-0.5 flex size-4 items-center justify-center rounded-full bg-brand-forest font-display text-[10px] font-semibold leading-none tabular-nums text-brand-ivory ring-2 ring-background">
                   {cartCount}
                 </span>
               ) : null}
@@ -339,15 +537,23 @@ export function StorefrontHeader() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1320px] px-4 pb-3 sm:px-6 lg:px-8 xl:hidden">
-        <SearchForm
-          id="mobile-search"
-          query={query}
-          onQueryChange={setQuery}
-          onSubmit={handleSearch}
-          className="flex items-center"
-        />
-      </div>
+      {mobileSearchOpen ? (
+        <div
+          id="compact-search-panel"
+          className="border-t border-border/70 bg-background px-4 py-3 sm:px-6 lg:px-8 xl:hidden"
+        >
+          <div className="mx-auto max-w-[1320px]">
+            <SearchForm
+              id="mobile-search"
+              query={query}
+              onQueryChange={setQuery}
+              onSubmit={handleSearch}
+              autoFocus
+              className="flex items-center"
+            />
+          </div>
+        </div>
+      ) : null}
 
       <nav
         id="mobile-navigation"
@@ -356,49 +562,83 @@ export function StorefrontHeader() {
         onKeyDown={(event) => {
           if (event.key === "Escape") setMobileOpen(false);
         }}
-        className={`${mobileOpen ? "block" : "hidden"} border-t border-border bg-background px-4 py-3 lg:hidden`}
+        className={`${mobileOpen ? "block" : "hidden"} max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-background px-4 py-3 lg:hidden`}
       >
-        <ul className="mx-auto max-w-[1320px] divide-y divide-border">
-          <li>
-            <Link to="/" className="mobile-nav-link" onClick={() => setMobileOpen(false)}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/shop" className="mobile-nav-link" onClick={() => setMobileOpen(false)}>
-              Shop all
-            </Link>
-          </li>
-          <li className="py-3">
-            <p className="mb-2 font-display text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-              Shop by room
-            </p>
-            <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
-              {rooms.map((room) => (
-                <li key={room.slug}>
-                  <Link
-                    to="/rooms/$slug"
-                    params={{ slug: room.slug }}
-                    className="block py-2 text-sm transition-colors hover:text-primary"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {room.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-          <li>
-            <Link to="/journal" className="mobile-nav-link" onClick={() => setMobileOpen(false)}>
-              Journal
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="mobile-nav-link" onClick={() => setMobileOpen(false)}>
-              About
-            </Link>
-          </li>
-        </ul>
+        <div className="mx-auto max-w-[1320px]">
+          <SearchForm
+            id="mobile-menu-search"
+            query={query}
+            onQueryChange={setQuery}
+            onSubmit={handleSearch}
+            className="mb-3 flex items-center"
+          />
+          <ul className="divide-y divide-border">
+            <li>
+              <Link
+                to="/"
+                aria-current={isHomeActive ? "page" : undefined}
+                className={`mobile-nav-link ${isHomeActive ? "font-semibold text-brand-forest" : ""}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/shop"
+                aria-current={isShopActive ? "page" : undefined}
+                className={`mobile-nav-link ${isShopActive ? "font-semibold text-brand-forest" : ""}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                Shop All
+              </Link>
+            </li>
+            <li className="py-3">
+              <p className="mb-2 font-display text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                Shop by Room
+              </p>
+              <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+                {rooms.map((room) => (
+                  <li key={room.slug}>
+                    <Link
+                      to="/rooms/$slug"
+                      params={{ slug: room.slug }}
+                      className="block py-2 text-sm transition-colors hover:text-brand-forest"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {room.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+            <li>
+              <Link
+                to="/journal"
+                aria-current={isJournalActive ? "page" : undefined}
+                className={`mobile-nav-link ${isJournalActive ? "font-semibold text-brand-forest" : ""}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                Journal
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about"
+                aria-current={isAboutActive ? "page" : undefined}
+                className={`mobile-nav-link ${isAboutActive ? "font-semibold text-brand-forest" : ""}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                About
+              </Link>
+            </li>
+            <li>
+              <Link to="/support" className="mobile-nav-link" onClick={() => setMobileOpen(false)}>
+                Customer Care
+              </Link>
+            </li>
+          </ul>
+        </div>
       </nav>
 
       {notice ? (

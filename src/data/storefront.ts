@@ -1,43 +1,58 @@
-import bedroomImage from "@/assets/bedroom.png.asset.json";
-import diningImage from "@/assets/dining.png.asset.json";
-import livingRoomImage from "@/assets/living-room.png.asset.json";
-import storageEntrywayImage from "@/assets/storage-entryway.png.asset.json";
-import workspaceImage from "@/assets/workspace.png.asset.json";
+import bedroomImage from "@/assets/images/room_serene_bedroom_1795589413652.jpg";
+import diningImage from "@/assets/images/room_nordic_dining_1795589415366.jpg";
+import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
+import storageEntrywayImage from "@/assets/images/room_oak_entryway_1795589416360.jpg";
+import workspaceImage from "@/assets/images/room_quiet_workspace_1795589414448.jpg";
 
 export const rooms = [
   {
-    title: "Living room",
+    title: "Living Room",
     slug: "living-room",
     description: "Comfortable spaces for slowing down.",
-    image: livingRoomImage.url,
+    editorialNote:
+      "Anchor the room with low timber forms, stonewashed flax throws, and warm ambient light that softens as dusk settles.",
+    materialsFocus: "Oiled European oak · Stonewashed flax · Flat-woven wool",
+    image: livingRoomImage,
     alt: "A calm living room with natural wood furniture and soft light",
   },
   {
     title: "Bedroom",
     slug: "bedroom",
     description: "Quiet essentials for rest and reset.",
-    image: bedroomImage.url,
+    editorialNote:
+      "Breathable cotton percale, muted clay linens, and soft touch-dimmed lighting create a calm threshold at the end of the day.",
+    materialsFocus: "Long-staple percale · Washed clay linen · Matte ceramic",
+    image: bedroomImage,
     alt: "A softly layered bedroom in warm natural tones",
   },
   {
     title: "Dining",
     slug: "dining",
     description: "Everyday rituals, simply considered.",
-    image: diningImage.url,
+    editorialNote:
+      "Stackable speckled stoneware, oiled oak serving boards, and hand-glazed vessels elevate weeknight suppers without ceremony.",
+    materialsFocus: "Reactive stoneware · Single-piece oiled oak · Raw linen",
+    image: diningImage,
     alt: "A welcoming dining table arranged for an everyday meal",
   },
   {
     title: "Workspace",
     slug: "workspace",
     description: "A little more calm in the working day.",
-    image: workspaceImage.url,
+    editorialNote:
+      "Focused task lighting and tiered solid-oak organisation clear visual noise from the desk so attention stays where it belongs.",
+    materialsFocus: "Powder-coated steel · Solid oak · Wool felt",
+    image: workspaceImage,
     alt: "A light-filled home workspace with a wooden desk",
   },
   {
-    title: "Storage & entryway",
+    title: "Storage & Entryway",
     slug: "storage-entryway",
     description: "Useful places for the things you reach for.",
-    image: storageEntrywayImage.url,
+    editorialNote:
+      "Steam-bent hooks, slim floating shelves, and generous benches give daily coats, bags, and shoes a considered resting place.",
+    materialsFocus: "Solid ash · Steam-bent oak · Concealed hardware",
+    image: storageEntrywayImage,
     alt: "A considered entryway with practical storage and warm wood",
   },
 ] as const;

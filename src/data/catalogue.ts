@@ -1,14 +1,29 @@
-import diningImage from "@/assets/dining.png.asset.json";
-import livingRoomImage from "@/assets/living-room.png.asset.json";
-import bedroomImage from "@/assets/bedroom.png.asset.json";
-import workspaceImage from "@/assets/workspace.png.asset.json";
-import storageEntrywayImage from "@/assets/storage-entryway.png.asset.json";
+import diningImage from "@/assets/images/room_nordic_dining_1795589415366.jpg";
+import livingRoomImage from "@/assets/images/room_living_sanctuary_1795589414829.jpg";
+import bedroomImage from "@/assets/images/room_serene_bedroom_1795589413652.jpg";
+import workspaceImage from "@/assets/images/room_quiet_workspace_1795589414448.jpg";
+import storageEntrywayImage from "@/assets/images/room_oak_entryway_1795589416360.jpg";
 import productCeramicVaseImage from "@/assets/images/product_ceramic_vase_1795587772032.jpg";
 import productOakTableImage from "@/assets/images/product_oak_table_1795587773196.jpg";
 import productLinenThrowImage from "@/assets/images/product_linen_throw_1795587773679.jpg";
 import productStonewareSetImage from "@/assets/images/product_stoneware_set_1795587776125.jpg";
+import ceramicShelfDetailImage from "@/assets/images/ceramic_shelf_detail_1795587775947.jpg";
+import nordicWallHooksImage from "@/assets/images/nordic_wall_hooks_1795587775351.jpg";
+import studioMorningLightImage from "@/assets/images/studio_morning_light_1795587774868.jpg";
 
 import { rooms } from "@/data/storefront";
+import { matchProductsByQuery } from "@/lib/storefront-logic";
+
+export type ProductVariant = {
+  label: string;
+  swatch: string;
+  priceDelta?: number;
+};
+
+export type ProductGalleryItem = {
+  src: string;
+  alt: string;
+};
 
 export type Product = {
   slug: string;
@@ -28,6 +43,8 @@ export type Product = {
   care: string;
   image: string;
   imageAlt: string;
+  gallery?: readonly ProductGalleryItem[];
+  variants?: readonly ProductVariant[];
 };
 
 export type Collection = {
@@ -47,14 +64,16 @@ export type JournalEntry = {
   image: string;
   imageAlt: string;
   body: readonly string[];
+  relatedProductSlugs?: readonly string[];
 };
 
 const IMAGE = {
-  livingRoom: livingRoomImage.url,
-  bedroom: bedroomImage.url,
-  dining: diningImage.url,
-  workspace: workspaceImage.url,
-  storage: storageEntrywayImage.url,
+  livingRoom: livingRoomImage,
+  bedroom: bedroomImage,
+  dining: diningImage,
+  workspace: workspaceImage,
+  storage: storageEntrywayImage,
+  studio: studioMorningLightImage,
 };
 
 export const products: readonly Product[] = [
@@ -246,7 +265,7 @@ export const products: readonly Product[] = [
     materials: "Solid ash, matte lacquer",
     dimensions: "W 60 × D 12 × H 4 cm",
     care: "Wipe with a dry cloth",
-    image: IMAGE.storage,
+    image: ceramicShelfDetailImage,
     imageAlt: "A slim wooden wall shelf holding small everyday objects",
   },
   {
@@ -360,7 +379,7 @@ export const products: readonly Product[] = [
     materials: "Solid oak, hard-wax oil",
     dimensions: "W 8 × D 7 × H 10 cm",
     care: "Wipe with a dry cloth",
-    image: IMAGE.storage,
+    image: nordicWallHooksImage,
     imageAlt: "A curved oak wall hook holding a woven tote",
   },
   {
@@ -434,8 +453,9 @@ export const journalEntries: readonly JournalEntry[] = [
     date: "2026-11-18",
     readingTime: "4 min read",
     category: "Philosophy",
-    image: livingRoomImage.url,
+    image: livingRoomImage,
     imageAlt: "A calm living room with natural wood furniture and soft light",
+    relatedProductSlugs: ["linen-throw", "oak-side-table", "ceramic-vase"],
     body: [
       "There is a quiet test for the things we live with: not whether they impress, but whether they help. A chair that invites you to sit a little longer. A lamp that makes evening reading feel like a small occasion. A throw that ends up on every sofa in the house because it is the one everyone reaches for.",
       "Slow living is often photographed as candlelight and unhurried breakfasts, but at home it begins somewhere plainer — with objects that work so easily they stop asking for attention. The linen throw that folds itself back into shape. The side table that holds exactly what needs holding.",
@@ -451,8 +471,9 @@ export const journalEntries: readonly JournalEntry[] = [
     date: "2026-11-04",
     readingTime: "3 min read",
     category: "How to",
-    image: storageEntrywayImage.url,
+    image: storageEntrywayImage,
     imageAlt: "A considered entryway with practical storage and warm wood",
+    relatedProductSlugs: ["storage-bench", "coat-hook", "wall-shelf"],
     body: [
       "The entryway is the first room you meet and the last one you tidy, which is why it drifts. The fix is not more storage — it is a short, repeatable reset that takes five minutes once a week.",
       "Start by emptying the surfaces completely. Return everything that belongs elsewhere, then put back only what genuinely serves the threshold: the keys bowl, the bag hook, the shoes in actual rotation. Everything else finds a home further inside.",
@@ -468,8 +489,9 @@ export const journalEntries: readonly JournalEntry[] = [
     date: "2026-10-21",
     readingTime: "5 min read",
     category: "Care guides",
-    image: bedroomImage.url,
+    image: bedroomImage,
     imageAlt: "A softly layered bedroom in warm natural tones",
+    relatedProductSlugs: ["linen-throw", "linen-cushion", "duvet-set"],
     body: [
       "Linen is one of the few materials that improves with neglect. Wash it cool, skip the softener, and let it wrinkle — the creases are the character, and pressing them away is a choice, not a duty.",
       "Wash separately for the first few cycles at 30 degrees with a mild detergent. Fabric softener coats the flax fibres and works against the very softness you are cultivating, so leave it on the shelf.",
@@ -478,6 +500,104 @@ export const journalEntries: readonly JournalEntry[] = [
     ],
   },
 ];
+
+const DEFAULT_VARIANTS_BY_CATEGORY: Record<Product["category"], readonly ProductVariant[]> = {
+  "Soft furnishings": [
+    { label: "Warm Oat", swatch: "#E7DFD2" },
+    { label: "Clay Taupe", swatch: "#B79F86" },
+    { label: "Sage Olive", swatch: "#6B7F5D" },
+  ],
+  Furniture: [
+    { label: "Natural Oiled Oak", swatch: "#C8A986" },
+    { label: "Smoked Oak", swatch: "#6E5847", priceDelta: 15 },
+  ],
+  Tableware: [
+    { label: "Speckled Sand", swatch: "#E7DFD2" },
+    { label: "Raw Clay", swatch: "#B79F86" },
+    { label: "Forest Glaze", swatch: "#2F4A3B" },
+  ],
+  Storage: [
+    { label: "Natural Oak", swatch: "#C8A986" },
+    { label: "Pale Ash", swatch: "#DFD3C3" },
+  ],
+  Lighting: [
+    { label: "Warm Ivory", swatch: "#FAF8F4" },
+    { label: "Matte Charcoal", swatch: "#2B2B2B" },
+    { label: "Mist Blue", swatch: "#8FA8B8" },
+  ],
+  "Home fragrance": [
+    { label: "Cedar & Fig", swatch: "#6B7F5D" },
+    { label: "Warm Amber", swatch: "#D4A656" },
+  ],
+};
+
+const ROOM_IMAGE_MAP: Record<string, { src: string; alt: string }> = {
+  "living-room": {
+    src: IMAGE.livingRoom,
+    alt: "Styled in a sunlit Scandinavian living room",
+  },
+  bedroom: {
+    src: IMAGE.bedroom,
+    alt: "Styled in a calm neutral bedroom sanctuary",
+  },
+  dining: {
+    src: IMAGE.dining,
+    alt: "Styled around an everyday Nordic oak dining table",
+  },
+  workspace: {
+    src: IMAGE.workspace,
+    alt: "Styled in a quiet daylight home workspace",
+  },
+  "storage-entryway": {
+    src: IMAGE.storage,
+    alt: "Styled in an organised natural oak entryway",
+  },
+};
+
+export function getProductVariants(product: Product): readonly ProductVariant[] {
+  return product.variants ?? DEFAULT_VARIANTS_BY_CATEGORY[product.category];
+}
+
+export function getVariantPrice(product: Product, variantLabel?: string): number {
+  if (!variantLabel) return product.price;
+  const variant = getProductVariants(product).find((v) => v.label === variantLabel);
+  return product.price + (variant?.priceDelta ?? 0);
+}
+
+export function getProductGallery(product: Product): readonly ProductGalleryItem[] {
+  if (product.gallery?.length) return product.gallery;
+  const items: ProductGalleryItem[] = [{ src: product.image, alt: product.imageAlt }];
+  const seen = new Set<string>([product.image]);
+
+  for (const roomSlug of product.rooms) {
+    const roomImg = ROOM_IMAGE_MAP[roomSlug];
+    if (roomImg && !seen.has(roomImg.src)) {
+      seen.add(roomImg.src);
+      items.push({ src: roomImg.src, alt: `${product.name} — ${roomImg.alt.toLowerCase()}` });
+    }
+  }
+
+  const studioFallbacks: ProductGalleryItem[] = [
+    {
+      src: IMAGE.studio,
+      alt: `${product.name} — styled in morning studio daylight`,
+    },
+    {
+      src: ceramicShelfDetailImage,
+      alt: `${product.name} — paired with tactile studio materials`,
+    },
+  ];
+
+  for (const fallback of studioFallbacks) {
+    if (items.length >= 3) break;
+    if (!seen.has(fallback.src)) {
+      seen.add(fallback.src);
+      items.push(fallback);
+    }
+  }
+
+  return items;
+}
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
@@ -504,20 +624,7 @@ export function getProductsForCollection(slug: string) {
 }
 
 export function searchProducts(term: string) {
-  const q = term.trim().toLowerCase();
-  if (!q) return [];
-  return products.filter((product) =>
-    [
-      product.name,
-      product.shortDescription,
-      product.category,
-      ...product.rooms,
-      ...product.collections,
-    ]
-      .join(" ")
-      .toLowerCase()
-      .includes(q),
-  );
+  return matchProductsByQuery(products, term);
 }
 
 export function formatPrice(amount: number) {
