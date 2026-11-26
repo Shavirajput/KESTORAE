@@ -35,6 +35,7 @@ describe("App routing", () => {
       "/returns",
       "/terms",
       "/account/register",
+      "/account/forgot-password",
     ];
 
     for (const path of paths) {

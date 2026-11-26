@@ -427,50 +427,49 @@ export function CreateAccountForm() {
           ) : null}
 
           <div id="register-password-requirements" className="mt-2.5 space-y-2">
-            {values.password.length > 0 ? (
-              <div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Password strength</span>
-                  <span
-                    className={`font-display text-[11px] font-semibold ${STRENGTH_LABEL_COLORS[passwordStrength.level]}`}
-                  >
-                    {passwordStrength.label}
-                  </span>
-                </div>
-                <div
-                  className="mt-1.5 grid grid-cols-4 gap-1.5"
-                  role="meter"
-                  aria-label="Password strength"
-                  aria-valuemin={0}
-                  aria-valuemax={4}
-                  aria-valuenow={passwordStrength.score}
-                  aria-valuetext={passwordStrength.label}
+            <div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground">Password strength</span>
+                <span
+                  aria-live="polite"
+                  className={`font-display text-[11px] font-semibold transition-colors duration-150 ${STRENGTH_LABEL_COLORS[passwordStrength.level]}`}
                 >
-                  {[1, 2, 3, 4].map((segment) => (
-                    <span
-                      key={segment}
-                      className={`h-1 rounded-xs transition-colors duration-150 ${
-                        segment <= passwordStrength.score
-                          ? STRENGTH_BAR_COLORS[passwordStrength.level]
-                          : "bg-brand-sand"
-                      }`}
-                    />
-                  ))}
-                </div>
+                  {passwordStrength.label}
+                </span>
               </div>
-            ) : null}
+              <div
+                className="mt-1.5 grid grid-cols-4 gap-1.5"
+                role="meter"
+                aria-label="Password strength"
+                aria-valuemin={0}
+                aria-valuemax={4}
+                aria-valuenow={passwordStrength.score}
+                aria-valuetext={`${passwordStrength.label} (${passwordStrength.score} of 4 requirements met)`}
+              >
+                {[1, 2, 3, 4].map((segment) => (
+                  <span
+                    key={segment}
+                    className={`h-1.5 rounded-xs transition-colors duration-200 ${
+                      segment <= passwordStrength.score
+                        ? STRENGTH_BAR_COLORS[passwordStrength.level]
+                        : "bg-brand-sand"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
 
             <ul className="grid grid-cols-1 gap-x-4 gap-y-1 text-xs sm:grid-cols-2">
               {passwordStrength.requirements.map((req) => (
                 <li
                   key={req.id}
-                  className={`flex items-center gap-1.5 transition-colors ${
-                    req.met ? "text-brand-forest" : "text-muted-foreground"
+                  className={`flex items-center gap-1.5 transition-colors duration-150 ${
+                    req.met ? "text-brand-forest font-medium" : "text-muted-foreground"
                   }`}
                 >
                   <Check
                     aria-hidden="true"
-                    className={`size-3.5 shrink-0 ${req.met ? "opacity-100" : "opacity-35"}`}
+                    className={`size-3.5 shrink-0 transition-opacity ${req.met ? "opacity-100" : "opacity-35"}`}
                   />
                   <span>{req.label}</span>
                 </li>

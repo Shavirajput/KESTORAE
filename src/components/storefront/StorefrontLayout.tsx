@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { AddedToBagToast } from "@/components/storefront/AddedToBagToast";
 import { AnnouncementBar } from "@/components/storefront/AnnouncementBar";
+import { BackToTopButton } from "@/components/storefront/BackToTopButton";
 import { CartProvider } from "@/components/storefront/CartContext";
 import { StorefrontFooter } from "@/components/storefront/StorefrontFooter";
 import { StorefrontHeader } from "@/components/storefront/StorefrontHeader";
@@ -24,6 +25,7 @@ export function StorefrontLayout({ children }: { children: ReactNode }) {
             {children}
           </div>
           <StorefrontFooter />
+          <BackToTopButton />
           <AddedToBagToast />
         </div>
       </WishlistProvider>

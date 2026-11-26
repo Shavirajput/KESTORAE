@@ -12,7 +12,7 @@ export type RegistrationFormValues = {
 export type RegistrationFormErrors = Partial<Record<keyof RegistrationFormValues, string>>;
 
 export type PasswordRequirement = {
-  id: "minLength" | "uppercase" | "lowercase" | "number";
+  id: "minLength" | "mixedCase" | "number" | "special";
   label: string;
   met: boolean;
 };
@@ -22,6 +22,7 @@ export type PasswordStrengthLevel = "empty" | "weak" | "fair" | "good" | "strong
 export type PasswordStrength = {
   level: PasswordStrengthLevel;
   score: 0 | 1 | 2 | 3 | 4;
+  percentage: 0 | 25 | 50 | 75 | 100;
   label: string;
   requirements: PasswordRequirement[];
 };
@@ -43,19 +44,19 @@ export function evaluatePasswordRequirements(password: string): PasswordRequirem
       met: password.length >= 8,
     },
     {
-      id: "uppercase",
-      label: "One uppercase letter",
-      met: /[A-Z]/.test(password),
-    },
-    {
-      id: "lowercase",
-      label: "One lowercase letter",
-      met: /[a-z]/.test(password),
+      id: "mixedCase",
+      label: "Upper & lowercase letters",
+      met: /[A-Z]/.test(password) && /[a-z]/.test(password),
     },
     {
       id: "number",
-      label: "One number",
+      label: "At least one number",
       met: /\d/.test(password),
+    },
+    {
+      id: "special",
+      label: "One special character",
+      met: /[^A-Za-z0-9]/.test(password),
     },
   ];
 }
@@ -67,19 +68,19 @@ export function evaluatePasswordStrength(password: string): PasswordStrength {
     return {
       level: "empty",
       score: 0,
-      label: "",
+      percentage: 0,
+      label: "Not set",
       requirements,
     };
   }
 
   const metCount = requirements.filter((req) => req.met).length;
-  const hasBonusLength = password.length >= 12;
-  const hasSymbol = /[^A-Za-z0-9]/.test(password);
 
   if (metCount <= 1 || password.length < 6) {
     return {
       level: "weak",
       score: 1,
+      percentage: 25,
       label: "Weak",
       requirements,
     };
@@ -89,15 +90,17 @@ export function evaluatePasswordStrength(password: string): PasswordStrength {
     return {
       level: "fair",
       score: 2,
+      percentage: 50,
       label: "Fair",
       requirements,
     };
   }
 
-  if (metCount === 3 || (metCount === 4 && !hasBonusLength && !hasSymbol && password.length < 10)) {
+  if (metCount === 3) {
     return {
       level: "good",
       score: 3,
+      percentage: 75,
       label: "Good",
       requirements,
     };
@@ -106,6 +109,7 @@ export function evaluatePasswordStrength(password: string): PasswordStrength {
   return {
     level: "strong",
     score: 4,
+    percentage: 100,
     label: "Strong",
     requirements,
   };
@@ -135,7 +139,7 @@ export function validateRegistrationForm(values: RegistrationFormValues): Regist
     errors.password = "Please create a password.";
   } else if (!allRequirementsMet) {
     errors.password =
-      "Password must be at least 8 characters and include uppercase, lowercase, and a number.";
+      "Password must be at least 8 characters and include upper & lowercase letters, a number, and a special character.";
   }
 
   if (!values.confirmPassword) {
@@ -150,4 +154,19 @@ export function validateRegistrationForm(values: RegistrationFormValues): Regist
   }
 
   return errors;
+}
+
+export type ForgotPasswordValidationResult =
+  | { valid: true; normalizedEmail: string; error?: undefined }
+  | { valid: false; error: string; normalizedEmail?: undefined };
+
+export function validateForgotPasswordEmail(email: string): ForgotPasswordValidationResult {
+  const trimmed = email.trim();
+  if (!trimmed) {
+    return { valid: false, error: "Please enter your email address." };
+  }
+  if (!isValidEmail(trimmed)) {
+    return { valid: false, error: "Please enter a valid email address." };
+  }
+  return { valid: true, normalizedEmail: trimmed.toLowerCase() };
 }
