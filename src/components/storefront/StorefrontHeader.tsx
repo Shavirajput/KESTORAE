@@ -4,9 +4,7 @@ import {
   ArrowRight,
   ChevronDown,
   Heart,
-  LifeBuoy,
   Menu,
-  Package,
   Search,
   ShoppingBag,
   Trash2,
@@ -58,13 +56,11 @@ export function StorefrontHeader() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [roomsOpen, setRoomsOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [notice, setNotice] = useState("");
 
   const roomsRef = useRef<HTMLDivElement | null>(null);
   const wishlistRef = useRef<HTMLDivElement | null>(null);
-  const accountRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
@@ -76,12 +72,11 @@ export function StorefrontHeader() {
     setMobileSearchOpen(false);
     setRoomsOpen(false);
     setWishlistOpen(false);
-    setAccountOpen(false);
     setNotice("");
   }, [pathname]);
 
   useEffect(() => {
-    if (!roomsOpen && !wishlistOpen && !accountOpen) return;
+    if (!roomsOpen && !wishlistOpen) return;
     const handlePointerDown = (event: MouseEvent) => {
       const target = event.target as Node;
       if (roomsOpen && roomsRef.current && !roomsRef.current.contains(target)) {
@@ -90,15 +85,11 @@ export function StorefrontHeader() {
       if (wishlistOpen && wishlistRef.current && !wishlistRef.current.contains(target)) {
         setWishlistOpen(false);
       }
-      if (accountOpen && accountRef.current && !accountRef.current.contains(target)) {
-        setAccountOpen(false);
-      }
     };
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setRoomsOpen(false);
         setWishlistOpen(false);
-        setAccountOpen(false);
       }
     };
     document.addEventListener("mousedown", handlePointerDown);
@@ -107,7 +98,7 @@ export function StorefrontHeader() {
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [roomsOpen, wishlistOpen, accountOpen]);
+  }, [roomsOpen, wishlistOpen]);
 
   const savedProducts = wishlistSlugs
     .map((slug) => getProduct(slug))
@@ -131,6 +122,7 @@ export function StorefrontHeader() {
   const isRoomsActive = pathname.startsWith("/rooms");
   const isJournalActive = pathname.startsWith("/journal");
   const isAboutActive = pathname === "/about";
+  const isAccountActive = pathname.startsWith("/account");
 
   const navLinkClass = (active: boolean) =>
     `nav-link relative whitespace-nowrap ${
@@ -153,7 +145,6 @@ export function StorefrontHeader() {
             onClick={() => {
               setMobileSearchOpen(false);
               setWishlistOpen(false);
-              setAccountOpen(false);
               setMobileOpen((open) => !open);
             }}
             className="size-10"
@@ -203,7 +194,6 @@ export function StorefrontHeader() {
               aria-controls="rooms-mega-menu"
               onClick={() => {
                 setWishlistOpen(false);
-                setAccountOpen(false);
                 setRoomsOpen((open) => !open);
               }}
               className={`${navLinkClass(isRoomsActive)} cursor-pointer gap-1`}
@@ -314,7 +304,6 @@ export function StorefrontHeader() {
             onClick={() => {
               setMobileOpen(false);
               setWishlistOpen(false);
-              setAccountOpen(false);
               setNotice("");
               setMobileSearchOpen((open) => !open);
             }}
@@ -327,86 +316,17 @@ export function StorefrontHeader() {
             )}
           </Button>
 
-          <div ref={accountRef} className="relative">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label="Studio care and quick links"
-              aria-expanded={accountOpen}
-              aria-controls="header-account-panel"
-              onClick={() => {
-                setRoomsOpen(false);
-                setWishlistOpen(false);
-                setMobileSearchOpen(false);
-                setNotice("");
-                setAccountOpen((open) => !open);
-              }}
-              className="size-10"
-            >
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            aria-label="Create account"
+            className={`size-10 ${isAccountActive ? "text-brand-forest" : ""}`}
+          >
+            <Link to="/account/register" aria-current={isAccountActive ? "page" : undefined}>
               <UserRound aria-hidden="true" className="size-[18px]" />
-            </Button>
-
-            {accountOpen ? (
-              <div
-                id="header-account-panel"
-                role="region"
-                aria-label="Customer care and account links"
-                className="absolute right-0 top-full z-50 mt-2.5 w-[min(17rem,calc(100vw-2rem))] rounded-md border border-border bg-background p-4 shadow-xl"
-              >
-                <div className="flex items-center justify-between border-b border-border pb-2.5">
-                  <p className="font-display text-xs font-semibold uppercase tracking-[0.1em] text-brand-charcoal">
-                    Kestorae Care
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setAccountOpen(false)}
-                    aria-label="Close quick menu"
-                    className="rounded-sm p-1 text-muted-foreground transition-colors hover:text-brand-charcoal"
-                  >
-                    <X aria-hidden="true" className="size-3.5" />
-                  </button>
-                </div>
-                <p className="mt-2.5 text-xs leading-5 text-muted-foreground">
-                  Guest checkout is active — no account is required to browse, save pieces, or place
-                  an illustrative order.
-                </p>
-                <ul className="mt-3 space-y-1 text-xs">
-                  <li>
-                    <Link
-                      to="/cart"
-                      onClick={() => setAccountOpen(false)}
-                      className="flex items-center gap-2 rounded-sm px-2 py-2 text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
-                    >
-                      <ShoppingBag aria-hidden="true" className="size-3.5 text-brand-forest" />
-                      Shopping bag ({cartCount})
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/support"
-                      hash="order-tracking"
-                      onClick={() => setAccountOpen(false)}
-                      className="flex items-center gap-2 rounded-sm px-2 py-2 text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
-                    >
-                      <Package aria-hidden="true" className="size-3.5 text-brand-forest" />
-                      Order tracking &amp; delivery
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/support"
-                      onClick={() => setAccountOpen(false)}
-                      className="flex items-center gap-2 rounded-sm px-2 py-2 text-brand-charcoal transition-colors hover:bg-brand-sand/55 hover:text-brand-forest"
-                    >
-                      <LifeBuoy aria-hidden="true" className="size-3.5 text-brand-forest" />
-                      Customer care &amp; FAQs
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            ) : null}
-          </div>
+            </Link>
+          </Button>
 
           <div ref={wishlistRef} className="relative">
             <Button
@@ -418,7 +338,6 @@ export function StorefrontHeader() {
               aria-controls="header-wishlist-panel"
               onClick={() => {
                 setRoomsOpen(false);
-                setAccountOpen(false);
                 setMobileSearchOpen(false);
                 setNotice("");
                 setWishlistOpen((open) => !open);
@@ -630,6 +549,16 @@ export function StorefrontHeader() {
                 onClick={() => setMobileOpen(false)}
               >
                 About
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/account/register"
+                aria-current={isAccountActive ? "page" : undefined}
+                className={`mobile-nav-link ${isAccountActive ? "font-semibold text-brand-forest" : ""}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                Create Account
               </Link>
             </li>
             <li>

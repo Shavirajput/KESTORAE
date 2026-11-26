@@ -34,6 +34,7 @@ describe("App routing", () => {
       "/shipping-policy",
       "/returns",
       "/terms",
+      "/account/register",
     ];
 
     for (const path of paths) {
